@@ -9,13 +9,13 @@ public enum BusinessType {
 
 	RESTURANT_CENTRAL("Central"), RESTURANT_FOOD_COURT("Food Court"), RESTURANT("Restaurant");
 
-	private String des;
+	private final String desc;
 
-	private BusinessType(String des) {
-		this.des = des;
+	private BusinessType(String desc) {
+		this.desc = desc;
 	}
 
-	public String getDes() {
-		return this.des;
+	public String getDesc() {
+		return this.desc;
 	}
 }

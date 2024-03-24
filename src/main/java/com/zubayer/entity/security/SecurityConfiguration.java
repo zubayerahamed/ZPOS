@@ -26,6 +26,7 @@ public class SecurityConfiguration {
 	private static final String[] ALLOWED_URLS = new String[]{
 		"/login/**", 
 		"/login-assets/**",
+		"/assets/**",
 		"/register/**",
 		"/business/**",
 		"/clearlogincache",

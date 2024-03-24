@@ -39,11 +39,21 @@
 			<div class="d-flex justify-content-end align-items-center ms-auto">
 				<ul class="navbar-nav flex-row">
 					<li class="nav-item">
+						<a th:href="@{/business/create}" class="navbar-nav-link navbar-nav-link-icon rounded ms-1">
+							<div class="d-flex align-items-center mx-md-1">
+								<i class="ph-storefront"></i>
+								<span class="d-none d-md-inline-block ms-2">Create Business</span>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav flex-row">
+					<li class="nav-item">
 						<a th:href="@{/clearlogincache}" class="navbar-nav-link navbar-nav-link-icon rounded ms-1">
 							<div class="d-flex align-items-center mx-md-1">
-							<i class="ph-sign-out"></i>
-							<span class="d-none d-md-inline-block ms-2">Logout</span>
-						</div>
+								<i class="ph-sign-out"></i>
+								<span class="d-none d-md-inline-block ms-2">Logout</span>
+							</div>
 						</a>
 					</li>
 				</ul>
