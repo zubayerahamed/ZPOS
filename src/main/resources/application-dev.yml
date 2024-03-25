@@ -28,4 +28,4 @@ default:
 
 app: 
   version: "@project.version@"
-  logging-path: D:/zpos
+  logging-path: D:/zpos/logs

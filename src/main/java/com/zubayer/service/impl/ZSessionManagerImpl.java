@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.zubayer.entity.Business;
@@ -42,22 +44,37 @@ public class ZSessionManagerImpl implements ZSessionManager {
 			sessionMap.remove(key);
 	}
 
-
 	@Override
 	public Long getBusinessId() {
-		// TODO Auto-generated method stub
-		return null;
+		Business business = getBusiness();
+		return business == null ? null : business.getId();
 	}
 
 	@Override
 	public Business getBusiness() {
-		// TODO Auto-generated method stub
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth == null || !auth.isAuthenticated()) return null;
+
+		Object principal = auth.getPrincipal();
+		if(principal instanceof MyUserDetail) {
+			MyUserDetail mud = (MyUserDetail) principal;
+			return mud.getBusiness();
+		}
+
 		return null;
 	}
 
 	@Override
 	public MyUserDetail getLoggedInUserDetails() {
-		// TODO Auto-generated method stub
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth == null || !auth.isAuthenticated()) return null;
+
+		Object principal = auth.getPrincipal(); 
+
+		if(principal instanceof MyUserDetail) {
+			return (MyUserDetail) principal;
+		}
+
 		return null;
 	}
 

@@ -28,6 +28,7 @@ public class MyUserDetail implements UserDetails {
 	private String email;
 	private String password;
 	private String roles;
+	private Business business;
 	private List<GrantedAuthority> authorities;
 
 	public MyUserDetail(Users user, Business business) {
@@ -35,6 +36,7 @@ public class MyUserDetail implements UserDetails {
 		this.email = user.getEmail();
 		this.password = user.getXpassword();
 		this.roles = user.getRoles();
+		this.business = business;
 		this.authorities = Arrays.stream(roles.split(","))
 				.map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
@@ -75,4 +77,7 @@ public class MyUserDetail implements UserDetails {
 		return true;
 	}
 
+	public Business getBusiness() {
+		return this.business;
+	}
 }

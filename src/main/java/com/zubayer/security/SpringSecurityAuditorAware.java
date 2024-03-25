@@ -1,4 +1,4 @@
-package com.zubayer.entity.security;
+package com.zubayer.security;
 
 import java.util.Optional;
 

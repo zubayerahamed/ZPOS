@@ -11,7 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping({"/", "/home"})
-public class HomeController {
+public class HomeController extends AbstractBaseController {
+
+	@Override
+	protected String pageTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@GetMapping
 	public String loadHomePage() {

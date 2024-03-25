@@ -1,12 +1,11 @@
-package com.zubayer.entity.security;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
+package com.zubayer.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,7 +13,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.zubayer.service.impl.UsersServiceImpl;
@@ -29,7 +30,6 @@ import com.zubayer.service.impl.UsersServiceImpl;
 public class SecurityConfiguration {
 
 	@Autowired private UsersServiceImpl userService;
-	@Autowired AuthenticationManager authenticationManager;
 
 	private static final String[] ALLOWED_URLS = new String[]{
 		"/login/**", 
@@ -40,16 +40,20 @@ public class SecurityConfiguration {
 	};
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+		return http.getSharedObject(AuthenticationManagerBuilder.class).build();
+	}
+
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
 		http
-			.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+			.addFilter(authenticationFilter(authenticationManager))
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(ALLOWED_URLS).permitAll()
 				.anyRequest().authenticated()
 			)
-			.authenticationManager(authenticationManager())
-			.userDetailsService(userService)
+			.authenticationProvider(authProvider())
 			.formLogin(formLogin -> formLogin
 				.loginPage("/login")
 				.failureUrl("/login?error")
@@ -69,17 +73,18 @@ public class SecurityConfiguration {
 		return http.build();
 	}
 
-	@Bean
-	AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userService)
-			.passwordEncoder(passwordEncoder());
-		return auth.getOrBuild();
+	private MyUsernamePasswordAuthenticationFilter authenticationFilter(AuthenticationManager authenticationManager) throws Exception {
+		MyUsernamePasswordAuthenticationFilter filter = new MyUsernamePasswordAuthenticationFilter(authenticationManager);
+		filter.setAuthenticationFailureHandler(authenticationFailureHandler());
+		filter.setSecurityContextRepository(new DelegatingSecurityContextRepository(new RequestAttributeSecurityContextRepository(), new HttpSessionSecurityContextRepository()));
+		return filter;
 	}
 
-	public SimpleAuthenticationFilter authenticationFilter() throws Exception {
-		SimpleAuthenticationFilter filter = new SimpleAuthenticationFilter();
-		filter.setAuthenticationFailureHandler(authenticationFailureHandler());
-		return filter;
+	private AuthenticationProvider authProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setUserDetailsService(userService);
+		provider.setPasswordEncoder(passwordEncoder());
+		return provider;
 	}
 
 	@Bean
