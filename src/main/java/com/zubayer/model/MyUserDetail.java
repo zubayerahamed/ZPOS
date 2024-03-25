@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.zubayer.entity.Business;
 import com.zubayer.entity.Users;
 
 import lombok.Data;
@@ -29,7 +30,7 @@ public class MyUserDetail implements UserDetails {
 	private String roles;
 	private List<GrantedAuthority> authorities;
 
-	public MyUserDetail(Users user) {
+	public MyUserDetail(Users user, Business business) {
 		this.id = user.getId();
 		this.email = user.getEmail();
 		this.password = user.getXpassword();

@@ -1,28 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Business Selection</title>
-	
-	<!-- <link th:href="@{/login-assets/images/favicon.ico}" rel="icon" type="image/x-icon" /> -->
-
-	<!-- Global stylesheets -->
-	<link th:href="@{/login-assets/fonts/inter/inter.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/login-assets/icons/phosphor/styles.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/login-assets/css/all.min.css}" id="stylesheet" rel="stylesheet" type="text/css">
-	<!-- /global stylesheets -->
-
-	<!-- Core JS files -->
-	<script th:src="@{/login-assets/js/jquery/jquery.min.js}"></script>
-	<script th:src="@{/login-assets/js/bootstrap/bootstrap.bundle.min.js}"></script>
-	<!-- /core JS files -->
-
-	<!-- Theme JS files -->
-	<script th:src="@{/login-assets/js/app.js}"></script>
-	<!-- /theme JS files -->
-
+	<meta th:remove="tag" th:include="commons :: common-meta"/>
+	<meta th:remove="tag" th:include="commons :: common-css"/>
+	<meta th:remove="tag" th:include="commons :: common-js"/>
 </head>
 
 <body>
@@ -98,6 +80,10 @@
 
 	</div>
 	<!-- /page content -->
+
+	<div th:remove="tag" th:include="commons :: modal-section"></div>
+
+	<div th:remove="tag" th:include="commons :: notification-section"></div>
 
 </body>
 </html>

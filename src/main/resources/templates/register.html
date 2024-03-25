@@ -1,28 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title th:text="${pageTitle}">Register</title>
-
-	<!-- <link th:href="@{/login-assets/images/favicon.ico}" rel="icon" type="image/x-icon" /> -->
-
-	<!-- Global stylesheets -->
-	<link th:href="@{/login-assets/fonts/inter/inter.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/login-assets/icons/phosphor/styles.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/login-assets/css/all.min.css}" id="stylesheet" rel="stylesheet" type="text/css">
-	<!-- /global stylesheets -->
-
-	<!-- Core JS files -->
-	<script th:src="@{/login-assets/js/jquery/jquery.min.js}"></script>
-	<script th:src="@{/login-assets/js/bootstrap/bootstrap.bundle.min.js}"></script>
-	<!-- /core JS files -->
-
-	<!-- Theme JS files -->
-	<script th:src="@{/login-assets/js/app.js}"></script>
-	<!-- /theme JS files -->
-
+	<meta th:remove="tag" th:include="commons :: common-meta"/>
+	<meta th:remove="tag" th:include="commons :: common-css"/>
+	<meta th:remove="tag" th:include="commons :: common-js"/>
 </head>
 
 <body>
@@ -43,7 +25,7 @@
 
 					<!-- Registration form -->
 					<div class="main-form-container">
-						<form id="register-form" class="login-form" role="form" th:action="@{/register}" method="post" autocomplete="off">
+						<form id="mainform" class="login-form" role="form" th:action="@{/register}" method="post" autocomplete="off">
 							<div class="card mb-0">
 								<div class="card-body">
 									<div class="text-center mb-3">
@@ -62,7 +44,7 @@
 									<div class="mb-3">
 										<label class="form-label">Email</label>
 										<div class="form-control-feedback form-control-feedback-start">
-											<input type="email" class="form-control" name="email" id="email" placeholder="Email" autocomplete="off" required>
+											<input type="email" class="form-control" name="email" id="email" placeholder="Email" autocomplete="off" value="cyclingbd007@gmail.com" required>
 											<div class="form-control-feedback-icon">
 												<i class="ph-envelope-simple text-muted"></i>
 											</div>
@@ -72,7 +54,7 @@
 									<div class="mb-3">
 										<label class="form-label">Password</label>
 										<div class="form-control-feedback form-control-feedback-start">
-											<input type="password" class="form-control" name="password" id="password" placeholder="•••••••••••" autocomplete="off" required>
+											<input type="password" class="form-control" name="password" id="password" placeholder="•••••••••••" autocomplete="off" value="1234" required>
 											<div class="form-control-feedback-icon">
 												<i class="ph-lock text-muted"></i>
 											</div>
@@ -82,7 +64,7 @@
 									<div class="mb-3">
 										<label class="form-label">Confirm Password</label>
 										<div class="form-control-feedback form-control-feedback-start">
-											<input type="password" class="form-control" name="cpassword" id="cpassword" placeholder="•••••••••••" autocomplete="off" required>
+											<input type="password" class="form-control" name="cpassword" id="cpassword" placeholder="•••••••••••" autocomplete="off" value="1234" required>
 											<div class="form-control-feedback-icon">
 												<i class="ph-lock text-muted"></i>
 											</div>
@@ -94,7 +76,7 @@
 									</div>
 
 									<div class="mb-3">
-										<button type="submit" class="btn btn-primary w-100 register-btn">Register</button>
+										<button type="submit" class="btn btn-primary w-100 btn-submit">Register</button>
 									</div>
 
 									<div class="text-center text-muted content-divider mb-3">
@@ -126,63 +108,18 @@
 	</div>
 	<!-- /page content -->
 
+	<div th:remove="tag" th:include="commons :: modal-section"></div>
 
-	<script type="text/javascript">
+	<div th:remove="tag" th:include="commons :: notification-section"></div>
+
+	<script>
 		$(document).ready(function(){
-			$('.register-btn').off('click').on('click', function(e){
+			kit.ui.init();
+
+			$('.btn-submit').off('click').on('click', function(e){
 				e.preventDefault();
 				submitMainForm();
-			})
-	
-			/**
-			 * Submit main form
-			 */
-			function submitMainForm(customurl){
-				if($('form#register-form').length < 1) return;
-	
-				var targettedForm = $('form#register-form');
-	
-				var submitUrl = (customurl != undefined) ? customurl : targettedForm.attr('action');
-				var submitType = targettedForm.attr('method');
-				var formData = $(targettedForm).serializeArray();
-	
-				$.ajax({
-					url : submitUrl,
-					type :submitType,
-					data : formData,
-					success : function(data) {
-						if(data.status == 'SUCCESS'){
-							alert(data.message);
-							setTimeout(() => {
-								window.location.replace(getBasepath() + data.redirecturl);
-							}, 1000);
-						} else {
-							$('.error-message-container').html(data.message);
-							$('form#register-form').trigger("reset");
-							$('.error-message-container').removeClass('d-none');
-							setTimeout(() => {
-								$('.error-message-container').addClass('d-none');
-							}, 5000);
-						}
-					}, 
-					error : function(jqXHR, status, errorThrown){
-						alert("Something went wrong. Please contact with system administrator");
-					}
-				});
-			}
-	
-			/**
-			 * Generate project context path
-			 */
-			function getBasepath(){
-				var basePath = $('a.basePath').attr('href');
-				basePath = basePath.split('/')[1];
-				var href = location.href.split('/');
-				if(basePath != ''){
-					return href[0] + '//' + href[2] + '/' + basePath;
-				}
-				return href[0] + '//' + href[2];
-			}
+			});
 		})
 	</script>
 

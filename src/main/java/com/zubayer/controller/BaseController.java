@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.zubayer.config.AppConfig;
@@ -32,7 +31,6 @@ public class BaseController {
 	@Autowired protected ZSessionManager sessionManager;
 	@Autowired protected AppConfig appConfig;
 	@Autowired protected ResponseHelper responseHelper;
-	@Autowired protected BCryptPasswordEncoder passwordEncoder;
 
 	@ModelAttribute("appVersion")
 	protected String appVersion() {
