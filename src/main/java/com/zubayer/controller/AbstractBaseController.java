@@ -8,15 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.zubayer.entity.Profiledt;
 import com.zubayer.entity.Users;
 import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Zbusiness;
+import com.zubayer.entity.validator.ModelValidator;
 import com.zubayer.model.MyUserDetail;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Validator;
 
 /**
  * @author Zubayer Ahamed
@@ -24,6 +27,9 @@ import jakarta.servlet.http.HttpServletRequest;
  * CSE202101068
  */
 public abstract class AbstractBaseController extends BaseController {
+
+	@Autowired protected ModelValidator modelValidator;
+	@Autowired protected Validator validator;
 
 	@ModelAttribute("pageTitle")
 	protected abstract String pageTitle();

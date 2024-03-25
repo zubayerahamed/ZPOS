@@ -1,0 +1,181 @@
+<div th:fragment="main-form" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div th:if="${not #strings.isEmpty(xscreens.xscreen)}" class="card-header d-sm-flex align-items-sm-center py-sm-0">
+			
+		</div>
+
+		<div class="card-body">
+			<form id="mainform" class="form-validate-jquery" th:action="@{/SA12/store}" th:object="${xscreens}" method="POST">
+				<input type="hidden" th:field="*{submitFor}"/>
+				<input type="hidden" th:if="${not #strings.isEmpty(xscreens.xscreen)}" th:field="*{xscreen}">
+
+				<div class="row">
+					<div class="col-md-3" th:if="${#strings.isEmpty(xscreens.xscreen)}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Screen</label>
+							<input type="text" class="form-control" th:field="*{xscreen}" required="required">
+						</div>
+					</div>
+					<div class="col-md-3" th:if="${not #strings.isEmpty(xscreens.xscreen)}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Screen</label>
+							<input type="text" class="form-control" th:value="${xscreens.xscreen}" disabled="disabled">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">Screen Title</label>
+							<input type="text" class="form-control" th:field="*{xtitle}" required="required">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">Transaction Number</label>
+							<input type="number" class="form-control" th:field="*{xnum}" min="0" step="1">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">Icon Code</label>
+							<input type="text" class="form-control" th:field="*{xicon}">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">Type</label>
+							<select class="form-control select" th:field="*{xtype}" required="required" data-minimum-results-for-search="Infinity">
+								<option value="Screen">Screen</option>
+								<option value="System">System</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">View Sequence</label>
+							<input type="number" class="form-control" th:field="*{xsequence}" min="0" step="1" required="required">
+						</div>
+					</div>
+				</div>
+
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<button type="reset" th:attr="data-reloadurl='/SA12/RESET', data-reloadid='main-form-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
+					</div>
+					<div>
+						<button th:if="${not #strings.isEmpty(xscreens.xscreen)}" th:attr="data-url=@{/SA12/} + ${xscreens.xscreen}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
+						<button th:if="${not #strings.isEmpty(xscreens.xscreen)}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
+						<button th:if="${#strings.isEmpty(xscreens.xscreen)}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Add</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+
+			$('.btn-reset').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('.btn-submit').off('click').on('click', function(e){
+				e.preventDefault();
+				submitMainForm();
+			});
+
+			$('.btn-delete').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+	
+		})
+	</script>
+</div>
+
+
+<div th:fragment="header-table" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div class="card-header d-sm-flex align-items-sm-center py-sm-0">
+			<h6 class="py-sm-3 mb-sm-auto"><span th:text="${pageTitle}"></span> List</h6>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table datatable">
+				<thead>
+					<tr>
+						<th>Screen</th>
+						<th>Title</th>
+						<th>Starting</th>
+						<th>Type</th>
+						<th>Icon</th>
+						<th>Sequence</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			kit.ui.init();
+
+			$('.datatable').DataTable({
+				"processing" : true,
+				"serverSide" : true,
+				"stateSave" : true,
+				"columnDefs": [
+					{ "name": "xscreen",   "targets": 0 },
+					{ "name": "xtitle",  "targets": 1 },
+					{ "name": "xnum",  "targets": 2 },
+					{ "name": "xtype",  "targets": 3 },
+					{ "name": "xicon",  "targets": 4 },
+					{ "name": "xsequence",  "targets": 5 }
+				],
+				"ajax" : getBasepath() + "/SA12/all",
+				"columns": [
+					{ 
+						"data": "xscreen",
+						render: function(data, type) {
+							return '<a style="text-decoration: underline; cursor: pointer;" class="dataindex" reloadid="main-form-container" href="/SA12/'+data+'">' + data + '</a>';
+						}
+					},
+					{ "data": "xtitle" },
+					{ 
+						"data": "xnum" ,
+						"class": 'text-end',
+					},
+					{ 
+						"data": "xtype",
+						"class": 'text-center',
+					},
+					{ "data": "xicon" },
+					{ 
+						"data": "xsequence",
+						"class": 'text-end',
+					}
+				]
+			});
+
+			$('.datatable').off('click').on('click', 'a.dataindex', function(e){
+				e.preventDefault();
+
+				var url = $(this).attr('href');
+				var id = $(this).attr('reloadid');
+
+				sectionReloadAjaxReq({
+					id : $(this).attr('reloadid'),
+					url : $(this).attr('href')
+				});
+			})
+		})
+	</script>
+</div>
