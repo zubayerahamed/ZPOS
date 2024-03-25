@@ -60,7 +60,7 @@ public class LoginController extends BaseController {
 			return responseHelper.getResponse();
 		}
 
-		Optional<Users> users = usersRepo.findByEmailAndXpasswordAndActive(fakeLoginUser.getUsername(), fakeLoginUser.getPassword(), Boolean.TRUE);
+		Optional<Users> users = usersRepo.findByEmailAndXpasswordAndZactive(fakeLoginUser.getUsername(), fakeLoginUser.getPassword(), Boolean.TRUE);
 		if (!users.isPresent()) {
 			responseHelper.setErrorStatusAndMessage("User not found in the system, please try again with appropriate username and password");
 			return responseHelper.getResponse();

@@ -5,12 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.zubayer.entity.Business;
 import com.zubayer.entity.Users;
+import com.zubayer.entity.Zbusiness;
 
 import lombok.Data;
 
@@ -24,22 +25,73 @@ public class MyUserDetail implements UserDetails {
 
 	private static final long serialVersionUID = -8257425089705103719L;
 
-	private Long id;
+	private Integer id;
 	private String email;
-	private String password;
+	private String xpassword;
+	private Integer zid;
+	private boolean admin;
+	private Integer xstaff;
+	private Zbusiness zbusiness;
+	private String xprofile;
+	private Integer xwh;
+	private String employeeName;
+	private boolean switchBusiness;
+
+	private boolean accountExpired;
+	private boolean credentialExpired;
+	private boolean accountLocked;
+	private boolean enabled;
 	private String roles;
-	private Business business;
 	private List<GrantedAuthority> authorities;
 
-	public MyUserDetail(Users user, Business business) {
+	public MyUserDetail(Users user, Zbusiness business) {
 		this.id = user.getId();
 		this.email = user.getEmail();
-		this.password = user.getXpassword();
-		this.roles = user.getRoles();
-		this.business = business;
-		this.authorities = Arrays.stream(roles.split(","))
-				.map(SimpleGrantedAuthority::new)
+		this.xpassword = user.getXpassword();
+		this.zid = business.getZid();
+		this.zbusiness = business;
+		this.admin = Boolean.TRUE.equals(user.getZadmin());
+		this.xstaff = user.getXstaff();
+		this.xprofile = user.getXprofile();
+		this.xwh = user.getXwh();
+		this.employeeName = user.getEmployee();
+		if(user.getXswbusiness() == null) {
+			this.switchBusiness = false;
+		} else {
+			this.switchBusiness = user.getXswbusiness();
+		}
+
+		this.accountExpired = false;
+		this.credentialExpired = false;
+		this.accountLocked = !Boolean.TRUE.equals(user.getZactive());
+		this.enabled = Boolean.TRUE.equals(user.getZactive());
+		this.roles = StringUtils.isBlank(user.getRoles()) ? com.zubayer.enums.UserRole.SUBSCRIBER.getCode() : user.getRoles();
+		this.authorities = Arrays.stream(roles.split(",")).map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
+	}
+
+	public String getEmployeeName() {
+		return this.employeeName;
+	}
+
+	public Integer getStore() {
+		return this.xwh;
+	}
+
+	public void setZbusiness(Zbusiness zbusiness) {
+		this.zbusiness = zbusiness;
+	}
+
+	public Zbusiness getZbusiness() {
+		return zbusiness;
+	}
+
+	public String getXprofile() {
+		return this.xprofile;
+	}
+	
+	public Integer getXstaff() {
+		return this.xstaff;
 	}
 
 	@Override
@@ -47,37 +99,49 @@ public class MyUserDetail implements UserDetails {
 		return authorities;
 	}
 
+	public String getRoles() {
+		return roles;
+	}
+
 	@Override
 	public String getPassword() {
-		return this.password;
+		return this.xpassword;
 	}
 
 	@Override
 	public String getUsername() {
-		return this.email;
+		return email;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return true;
+		return !credentialExpired;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return !accountLocked;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return !credentialExpired;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return enabled;
 	}
 
-	public Business getBusiness() {
-		return this.business;
+	public Integer getBusinessId() {
+		return zid;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public boolean isSwitchBusiness() {
+		return switchBusiness;
 	}
 }

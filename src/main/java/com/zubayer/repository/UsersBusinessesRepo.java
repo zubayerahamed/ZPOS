@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.zubayer.entity.UsersBusinesses;
+import com.zubayer.entity.UsersZbusinesses;
 
 /**
  * @author Zubayer Ahamed
@@ -13,7 +13,7 @@ import com.zubayer.entity.UsersBusinesses;
  * CSE202101068
  */
 @Repository
-public interface UsersBusinessesRepo extends JpaRepository<UsersBusinesses, Long> {
+public interface UsersBusinessesRepo extends JpaRepository<UsersZbusinesses, Long> {
 
-	public List<UsersBusinesses> findAllByUserId(Long userId);
+	public List<UsersZbusinesses> findAllByUid(Integer uid);
 }

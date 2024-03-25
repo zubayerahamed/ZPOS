@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.zubayer.entity.Business;
+import com.zubayer.entity.Zbusiness;
 import com.zubayer.model.MyUserDetail;
 import com.zubayer.service.ZSessionManager;
 
@@ -45,20 +45,20 @@ public class ZSessionManagerImpl implements ZSessionManager {
 	}
 
 	@Override
-	public Long getBusinessId() {
-		Business business = getBusiness();
-		return business == null ? null : business.getId();
+	public Integer getBusinessId() {
+		Zbusiness business = getBusiness();
+		return business == null ? null : business.getZid();
 	}
 
 	@Override
-	public Business getBusiness() {
+	public Zbusiness getBusiness() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth == null || !auth.isAuthenticated()) return null;
 
 		Object principal = auth.getPrincipal();
 		if(principal instanceof MyUserDetail) {
 			MyUserDetail mud = (MyUserDetail) principal;
-			return mud.getBusiness();
+			return mud.getZbusiness();
 		}
 
 		return null;

@@ -21,12 +21,12 @@ public class ZposApplication {
 	}
 
 	@Bean
-	public AuditorAware<Long> auditorAware() {
+	AuditorAware<Integer> auditorAware() {
 		return new SpringSecurityAuditorAware();
 	}
 
 	@Bean
-	public LocaleResolver localeResolver() {
+	LocaleResolver localeResolver() {
 		SessionLocaleResolver slr = new SessionLocaleResolver();
 		slr.setDefaultLocale(Locale.US);
 		return slr;

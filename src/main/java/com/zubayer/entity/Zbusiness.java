@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Data;
@@ -21,32 +22,48 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @Entity
-@Table(name = "business")
+@Table(name = "zbusiness")
 @EqualsAndHashCode(callSuper = true)
-public class Business extends AbstractModel<Long> {
+public class Zbusiness extends AbstractModel<Integer> {
 
 	private static final long serialVersionUID = 1466366937749857116L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer zid;
 
-	@Column(name = "code", length = 10, unique = true)
-	private String code;
+	@Column(name = "zorg", length = 50, nullable = false)
+	private String zorg;
 
-	@Column(name = "name", length = 50, nullable = false)
-	private String name;
+	@Column(name = "xemail", length = 50)
+	private String xemail;
 
-	@Column(name = "active", length = 1)
-	private Boolean active = Boolean.TRUE;
+	@Column(name = "xmadd", length = 200)
+	private String xmadd;
+
+	@Column(name = "zpassword", length = 25)
+	private String zpassword;
+
+	@Lob
+	@Column(name = "xlogo")
+	private byte[] xlogo;
+
+	@Column(name = "zactive")
+	private Boolean zactive;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "businessType", nullable = false)
 	private BusinessType businessType;
 
 	@Transient
+	private String imageBase64;
+
+	@Transient
 	private String zemail;
 
 	@Transient
-	private String zpasswd;
+	private String xpassword;
+
+	@Transient
+	private String zname;
 }

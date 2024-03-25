@@ -15,9 +15,9 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @Entity
-@Table(name = "users_businesses")
+@Table(name = "users_zbusinesses")
 @EqualsAndHashCode(callSuper = true)
-public class UsersBusinesses extends AbstractModel<Long> {
+public class UsersZbusinesses extends AbstractModel<Integer> {
 
 	private static final long serialVersionUID = -2190145826598442182L;
 
@@ -25,6 +25,6 @@ public class UsersBusinesses extends AbstractModel<Long> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Long userId;
-	private Long businessId;
+	private Integer uid;
+	private Integer zid;
 }

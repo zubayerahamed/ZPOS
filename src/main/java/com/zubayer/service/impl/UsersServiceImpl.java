@@ -9,10 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.zubayer.entity.Business;
+import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.Users;
 import com.zubayer.model.MyUserDetail;
-import com.zubayer.repository.BusinessRepo;
+import com.zubayer.repository.ZbusinessRepo;
 import com.zubayer.repository.UsersRepo;
 import com.zubayer.service.UsersService;
 
@@ -25,7 +25,7 @@ import com.zubayer.service.UsersService;
 public class UsersServiceImpl implements UserDetailsService, UsersService {
 
 	@Autowired private UsersRepo usersRepo;
-	@Autowired private BusinessRepo businessRepo;
+	@Autowired private ZbusinessRepo businessRepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -38,14 +38,14 @@ public class UsersServiceImpl implements UserDetailsService, UsersService {
 			throw new UsernameNotFoundException("User not found in the system");
 
 		String email = token[0];
-		Long businessId = Long.valueOf(token[1]);
+		Integer businessId = Integer.valueOf(token[1]);
 
 		Optional<Users> userOp = usersRepo.findByEmail(email);
 		if (!userOp.isPresent())
 			throw new UsernameNotFoundException("User not found");
 
-		Optional<Business> businessOp = businessRepo.findById(businessId);
-		if(!businessOp.isPresent() || Boolean.FALSE.equals(businessOp.get().getActive())) {
+		Optional<Zbusiness> businessOp = businessRepo.findById(businessId);
+		if(!businessOp.isPresent() || Boolean.FALSE.equals(businessOp.get().getZactive())) {
 			throw new UsernameNotFoundException("Business not active");
 		}
 

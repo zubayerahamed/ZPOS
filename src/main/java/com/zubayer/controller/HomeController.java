@@ -15,8 +15,7 @@ public class HomeController extends AbstractBaseController {
 
 	@Override
 	protected String pageTitle() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Home";
 	}
 
 	@GetMapping

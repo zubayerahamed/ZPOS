@@ -88,8 +88,8 @@ public class RegisterController extends BaseController {
 		Users user = new Users();
 		user.setEmail(req.getEmail());
 		user.setXpassword(req.getPassword());
-		user.setActive(true);
-		user.setIsAdmin(true);
+		user.setZactive(true);
+		user.setZadmin(true);
 		user = usersRepo.save(user);
 		if(user == null || user.getId() == null) {
 			responseHelper.setErrorStatusAndMessage("Failed to crate account");

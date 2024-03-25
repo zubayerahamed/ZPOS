@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zubayer.entity.Business;
+import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.Users;
-import com.zubayer.entity.UsersBusinesses;
-import com.zubayer.repository.BusinessRepo;
+import com.zubayer.entity.UsersZbusinesses;
+import com.zubayer.repository.ZbusinessRepo;
 import com.zubayer.repository.UsersBusinessesRepo;
 
 
@@ -34,7 +34,7 @@ import com.zubayer.repository.UsersBusinessesRepo;
 public class BusinessController extends BaseController {
 
 	@Autowired private UsersBusinessesRepo ubRepo;
-	@Autowired private BusinessRepo businessRepo;
+	@Autowired private ZbusinessRepo businessRepo;
 
 	@GetMapping
 	public String loadBusinessPage(Model model) {
@@ -52,21 +52,21 @@ public class BusinessController extends BaseController {
 			return "redirect:/";
 		}
 
-		List<Business> businesses = new ArrayList<>();
-		List<UsersBusinesses> ubList = ubRepo.findAllByUserId(user.getId());
+		List<Zbusiness> businesses = new ArrayList<>();
+		List<UsersZbusinesses> ubList = ubRepo.findAllByUid(user.getId());
 		if(ubList != null && !ubList.isEmpty()) {
-			for(UsersBusinesses ub : ubList) {
-				Optional<Business> businessOp = businessRepo.findById(ub.getBusinessId());
-				if(businessOp.isPresent() && Boolean.TRUE.equals(businessOp.get().getActive())) {
-					Business b = businessOp.get();
+			for(UsersZbusinesses ub : ubList) {
+				Optional<Zbusiness> businessOp = businessRepo.findById(ub.getZid());
+				if(businessOp.isPresent()) {
+					Zbusiness b = businessOp.get();
 					b.setZemail(user.getEmail());
-					b.setZpasswd(user.getXpassword());
+					b.setXpassword(user.getXpassword());
 					businesses.add(businessOp.get());
 				}
 			}
 		}
 
-		businesses.sort(Comparator.comparing(Business::getName));
+		businesses.sort(Comparator.comparing(Zbusiness::getZorg));
 		model.addAttribute("businesses", businesses);
 
 		if(sessionManager.getFromMap(ALL_BUSINESS) != null) {
@@ -97,7 +97,7 @@ public class BusinessController extends BaseController {
 	}
 
 	@PostMapping("/create")
-	public @ResponseBody Map<String, Object> loadBusinessCreatePage(Business business) {
+	public @ResponseBody Map<String, Object> loadBusinessCreatePage(Zbusiness business) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
 		if (!OUTSIDE_USERS_NAME.equalsIgnoreCase(username)) {
@@ -119,7 +119,7 @@ public class BusinessController extends BaseController {
 			return responseHelper.getResponse();
 		}
 
-		if(StringUtils.isBlank(business.getName())) {
+		if(StringUtils.isBlank(business.getZorg())) {
 			responseHelper.setErrorStatusAndMessage("Business name required");
 			return responseHelper.getResponse();
 		}
@@ -129,15 +129,16 @@ public class BusinessController extends BaseController {
 			return responseHelper.getResponse();
 		}
 
+		business.setZactive(true);
 		business = businessRepo.save(business);
-		if(business == null || business.getId() == null) {
+		if(business == null || business.getZid() == null) {
 			responseHelper.setErrorStatusAndMessage("Business creation failed");
 			return responseHelper.getResponse();
 		}
 
-		UsersBusinesses ub = new UsersBusinesses();
-		ub.setUserId(user.getId());
-		ub.setBusinessId(business.getId());
+		UsersZbusinesses ub = new UsersZbusinesses();
+		ub.setUid(user.getId());
+		ub.setZid(business.getZid());
 		ub = ubRepo.save(ub);
 		if(ub == null || ub.getId() == null) {
 			responseHelper.setErrorStatusAndMessage("Business creation failed");

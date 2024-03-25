@@ -1,1 +1,59 @@
-hi there
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${pageTitle}"></title>
+	<meta th:remove="tag" th:include="commons :: common-meta"/>
+	<meta th:remove="tag" th:include="commons :: common-css"/>
+	<meta th:remove="tag" th:include="commons :: common-js"/>
+</head>
+
+<body>
+
+	<!-- Main navbar -->
+	<div th:remove="tag" th:include="commons :: main-menu"></div>
+
+
+	<!-- Page content -->
+	<div class="page-content">
+
+		<!-- Main sidebar -->
+		<div th:remove="tag" th:include="commons :: main-sidebar"></div>
+		<!-- /main sidebar -->
+
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Inner content -->
+			<div class="content-inner">
+
+				<!-- Content area -->
+				<div class="content">
+
+					<!-- Main charts -->
+					<div class="row">
+						
+					</div>
+					<!-- /main charts -->
+
+				</div>
+				<!-- /content area -->
+
+				<!-- Footer -->
+				<div th:remove="tag" th:include="commons :: footer-section"></div>
+				<!-- /footer -->
+
+			</div>
+			<!-- /inner content -->
+
+		</div>
+		<!-- /main content -->
+
+	</div>
+	<!-- /page content -->
+	
+	
+	<div th:remove="tag" th:include="commons :: notification-section"></div>
+
+</body>
+</html>

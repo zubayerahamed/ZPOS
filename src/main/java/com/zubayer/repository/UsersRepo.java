@@ -17,5 +17,5 @@ public interface UsersRepo extends JpaRepository<Users, Long> {
 
 	Optional<Users> findByEmail(String email);
 
-	Optional<Users> findByEmailAndXpasswordAndActive(String email, String xpassword, Boolean active);
+	Optional<Users> findByEmailAndXpasswordAndZactive(String email, String xpassword, Boolean zactive);
 }

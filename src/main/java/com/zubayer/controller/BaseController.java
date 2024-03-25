@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.zubayer.config.AppConfig;
 import com.zubayer.model.ResponseHelper;
+import com.zubayer.repository.ProfiledtRepo;
+import com.zubayer.repository.UsersRepo;
+import com.zubayer.repository.XscreensRepo;
 import com.zubayer.service.ZSessionManager;
 
 /**
@@ -31,6 +34,9 @@ public class BaseController {
 	@Autowired protected ZSessionManager sessionManager;
 	@Autowired protected AppConfig appConfig;
 	@Autowired protected ResponseHelper responseHelper;
+	@Autowired protected UsersRepo usersRepo;
+	@Autowired protected XscreensRepo xscreensRepo;
+	@Autowired protected ProfiledtRepo profiledtRepo;
 
 	@ModelAttribute("appVersion")
 	protected String appVersion() {

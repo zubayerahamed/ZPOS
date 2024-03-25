@@ -1,6 +1,6 @@
 package com.zubayer.service;
 
-import com.zubayer.entity.Business;
+import com.zubayer.entity.Zbusiness;
 import com.zubayer.model.MyUserDetail;
 
 /**
@@ -16,9 +16,9 @@ public interface ZSessionManager {
 
 	public void removeFromMap(String key);
 
-	public Long getBusinessId();
+	public Integer getBusinessId();
 
-	public Business getBusiness();
+	public Zbusiness getBusiness();
 
 	public MyUserDetail getLoggedInUserDetails();
 }
