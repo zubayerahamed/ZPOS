@@ -50,6 +50,7 @@ public class XscreensServiceImpl extends AbstractService implements XscreensServ
 		em.setXtype((String) row.get("xtype"));
 		em.setXicon((String) row.get("xicon"));
 		em.setXsequence((Integer) row.get("xsequence"));
+		em.setPxscreen((String) row.get("pxscreen"));
 		return em;
 	}
 

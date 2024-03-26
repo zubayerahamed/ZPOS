@@ -45,7 +45,17 @@
 							<label class="form-label">Type</label>
 							<select class="form-control select" th:field="*{xtype}" required="required" data-minimum-results-for-search="Infinity">
 								<option value="Screen">Screen</option>
+								<option value="Module">Module</option>
 								<option value="System">System</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">Parent Screen</label>
+							<select class="form-control select" th:field="*{pxscreen}">
+								<option value="">-- Select Parent Screen --</option>
+								<option th:each="x : ${pxscreens}" th:value="${x.xscreen}" th:text="${x.xscreen}" th:classappend="${x.xtype eq 'Module' ? 'text-danger' : ''}">Screen</option>
 							</select>
 						</div>
 					</div>
@@ -113,6 +123,7 @@
 					<tr>
 						<th>Screen</th>
 						<th>Title</th>
+						<th>Parent</th>
 						<th>Starting</th>
 						<th>Type</th>
 						<th>Icon</th>
@@ -135,10 +146,11 @@
 				"columnDefs": [
 					{ "name": "xscreen",   "targets": 0 },
 					{ "name": "xtitle",  "targets": 1 },
-					{ "name": "xnum",  "targets": 2 },
-					{ "name": "xtype",  "targets": 3 },
-					{ "name": "xicon",  "targets": 4 },
-					{ "name": "xsequence",  "targets": 5 }
+					{ "name": "pxscreen",  "targets": 2 },
+					{ "name": "xnum",  "targets": 3 },
+					{ "name": "xtype",  "targets": 4 },
+					{ "name": "xicon",  "targets": 5 },
+					{ "name": "xsequence",  "targets": 6 }
 				],
 				"ajax" : getBasepath() + "/SA12/all",
 				"columns": [
@@ -149,6 +161,7 @@
 						}
 					},
 					{ "data": "xtitle" },
+					{ "data": "pxscreen" },
 					{ 
 						"data": "xnum" ,
 						"class": 'text-end',

@@ -1,9 +1,12 @@
 package com.zubayer.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +57,11 @@ public class SA12 extends AbstractBaseController {
 	@GetMapping
 	public String index(Model model) {
 		model.addAttribute("xscreens", Xscreens.getDefaultInstance());
+
+		List<Xscreens> menus = xscreensRepo.findAllByZidAndXtypeIn(sessionManager.getBusinessId(), Arrays.asList("Screen", "Module"));
+		menus.sort(Comparator.comparing(Xscreens::getXsequence));
+		model.addAttribute("pxscreens", menus);
+
 		return "pages/SA12/SA12";
 	}
 
@@ -66,7 +74,28 @@ public class SA12 extends AbstractBaseController {
 
 		Optional<Xscreens> op = xscreensRepo.findById(new XscreensPK(sessionManager.getBusinessId(), xscreen));
 		model.addAttribute("xscreens", op.isPresent() ? op.get() : Xscreens.getDefaultInstance());
+
+		List<Xscreens> menus = xscreensRepo.findAllByZidAndXtypeIn(sessionManager.getBusinessId(), Arrays.asList("Screen", "Module"));
+		// remove self
+		menus = menus.stream().filter(f -> !f.getXscreen().equals(xscreen)).collect(Collectors.toList());
+		// Get all child's xscreen list
+		List<String> childs = new ArrayList<>();
+		getAllChildrensMenu(xscreen, menus, childs);
+		// remove all child's
+		menus = menus.stream().filter(f -> !childs.contains(f.getXscreen())).collect(Collectors.toList());
+		menus.sort(Comparator.comparing(Xscreens::getXsequence));
+		model.addAttribute("pxscreens", menus);
+
 		return "pages/SA12/SA12-fragments::main-form";
+	}
+
+	private void getAllChildrensMenu(String parentMenu, List<Xscreens> menus, List<String> childs) {
+		for(Xscreens screen : menus) {
+			if(screen.getPxscreen() != null && screen.getPxscreen().equals(parentMenu)) {
+				childs.add(screen.getXscreen());
+				getAllChildrensMenu(screen.getXscreen(), menus, childs);
+			}
+		}
 	}
 
 	@GetMapping("/header-table")
@@ -99,6 +128,7 @@ public class SA12 extends AbstractBaseController {
 
 		// Create new
 		if(SubmitFor.INSERT.equals(xscreens.getSubmitFor())) {
+			if("System".equals(xscreens.getXtype())) xscreens.setPxscreen(null);
 			xscreens.setZid(sessionManager.getBusinessId());
 			xscreens = xscreensRepo.save(xscreens);
 
@@ -119,6 +149,7 @@ public class SA12 extends AbstractBaseController {
 
 		Xscreens existObj = op.get();
 		BeanUtils.copyProperties(xscreens, existObj, "zid", "zuserid", "ztime", "xscreen");
+		if("System".equals(existObj.getXtype())) existObj.setPxscreen(null);
 		existObj = xscreensRepo.save(existObj);
 
 		List<ReloadSection> reloadSections = new ArrayList<>();

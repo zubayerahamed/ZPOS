@@ -33,11 +33,9 @@
 	<script th:src="@{/assets/js/vendor/visualization/d3/d3.min.js}"></script>
 	<script th:src="@{/assets/js/vendor/visualization/d3/d3_tooltip.js}"></script>
 	<script th:src="@{/assets/js/vendor/tables/datatables/datatables.min.js}"></script>
-	
-	<!-- <script th:src="@{/assets/js/vendor/tables/datatables/extensions/row_reorder.min.js}"></script>
+	<script th:src="@{/assets/js/vendor/tables/datatables/extensions/row_reorder.min.js}"></script>
 	<script th:src="@{/assets/js/vendor/tables/datatables/extensions/responsive.min.js}"></script>
-	<script th:src="@{/assets/js/vendor/tables/datatables/extensions/responsive_bs.js}"></script> -->
-	
+	<script th:src="@{/assets/js/vendor/tables/datatables/extensions/responsive_bs.js}"></script>
 	<script th:src="@{/assets/js/vendor/forms/selects/select2.min.js}"></script>
 	<script th:src="@{/assets/js/vendor/notifications/noty.min.js}"></script>
 	<script th:src="@{/assets/js/vendor/ui/moment/moment.min.js}"></script>
@@ -64,28 +62,28 @@
 					<i class="ph-list"></i>
 				</button>
 			</div>
-	
+
 			<div class="navbar-brand flex-1 flex-lg-0">
 				<a th:href="@{/}" class="d-inline-flex align-items-center side-nav-link">
 					<!-- <img th:src="@{/login-assets/images/logo.png}" alt="" style="height: 38px;"> -->
-					<h3 class="m-0 p-0 text-white" th:text="${loggedInZbusiness.zorg}">DEMO</h3>
+					<h3 class="m-0 p-0 text-white">ZPOS</h3>
 				</a>
 			</div>
-	
+
 			<ul class="nav flex-row">
 			</ul>
-	
+
 			<ul class="nav flex-row justify-content-end order-1 order-lg-2">
 				<li class="nav-item nav-item-dropdown-lg dropdown ms-lg-2" th:if="${loggedInUser.switchBusiness}">
 					<a href="#" class="navbar-nav-link align-items-center rounded-pill p-1" data-bs-toggle="dropdown">
 						<div class="status-indicator-container">
-							<!-- <img th:src="@{/assets/images/demo/users/face11.jpg}" class="w-32px h-32px rounded-pill" alt=""> -->
+							<!--<img th:src="@{/assets/images/demo/users/face11.jpg}" class="w-32px h-32px rounded-pill" alt="">-->
 							<i class="ph-briefcase" style="font-size: 25px;"></i>
 							<span class="status-indicator bg-success"></span>
 						</div>
 						<span class="d-none d-lg-inline-block mx-lg-2">Switch Business</span>
 					</a>
-	
+
 					<div class="dropdown-menu dropdown-menu-end">
 						<a th:each="user : ${otherBusinesses}" th:href="@{/switchbusiness/} + ${user.zid}" class="dropdown-item">
 							<i class="ph-briefcase me-2" style="font-size: 25px;"></i><span th:text="${user.businessName}"></span>
@@ -103,7 +101,7 @@
 						</div>
 						<span class="d-none d-lg-inline-block mx-lg-2" th:text="${#strings.isEmpty(loggedInUser.employeeName) ? loggedInUser.username : loggedInUser.xstaff + ' - ' + loggedInUser.employeeName}"></span>
 					</a>
-	
+
 					<div class="dropdown-menu dropdown-menu-end">
 						<a th:href="@{/CP}" class="dropdown-item">
 							<i class="ph-key me-2"></i>
@@ -130,7 +128,7 @@
 			<!-- Sidebar header -->
 			<div class="sidebar-section">
 				<div class="sidebar-section-body d-flex justify-content-center">
-					<!-- <h5 class="sidebar-resize-hide flex-grow-1 my-auto" th:text="${#strings.isEmpty(loggedInZbusiness.zname) ? 'DEMO ERP' : loggedInZbusiness.zname}">DEMO ERP</h5> -->
+					<h5 class="sidebar-resize-hide flex-grow-1 my-auto" th:text="${#strings.isEmpty(loggedInZbusiness.zorg) ? 'ZPOS' : loggedInZbusiness.zorg}">DEMO ERP</h5>
 
 					<div>
 						<button type="button" class="navigation-btn btn btn-flat-white btn-icon btn-sm rounded-pill border-transparent sidebar-control expand-mode sidebar-main-resize d-none d-lg-inline-flex">
@@ -151,13 +149,31 @@
 				<ul class="nav nav-sidebar" data-nav-type="accordion">
 
 					<!-- Main -->
+					<li class="nav-item-header pt-0">
+						<div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Main</div>
+						<i class="ph-dots-three sidebar-resize-show"></i>
+					</li>
 					<li class="nav-item" th:each="menu : ${sidebarMenus}">
 						<a th:href="@{/} + ${menu.xscreen}" th:attr="id=${menu.xscreen}" class="nav-link side-nav-link">
 							<i th:classappend="${#strings.isEmpty(menu.xicon) ? 'ph-house' : menu.xicon}"></i>
 							<span th:text="${menu.xtitle}"></span>
 						</a>
 					</li>
-					
+					<li class="nav-item nav-item-submenu">
+						<a href="#" class="nav-link">
+							<i class="ph-layout"></i>
+							<span>Layouts</span>
+						</a>
+						<ul class="nav-group-sub collapse">
+							<li class="nav-item"><a href="index.html" class="nav-link active">Default layout</a></li>
+							<li class="nav-item"><a href="../../layout_2/full/index.html" class="nav-link">Layout 2</a></li>
+							<li class="nav-item"><a href="../../layout_3/full/index.html" class="nav-link">Layout 3</a></li>
+							<li class="nav-item"><a href="../../layout_4/full/index.html" class="nav-link">Layout 4</a></li>
+							<li class="nav-item"><a href="../../layout_5/full/index.html" class="nav-link">Layout 5</a></li>
+							<li class="nav-item"><a href="../../layout_6/full/index.html" class="nav-link">Layout 6</a></li>
+							<li class="nav-item"><a href="../../layout_7/full/index.html" class="nav-link disabled">Layout 7 <span class="badge align-self-center ms-auto">Coming soon</span></a></li>
+						</ul>
+					</li>
 
 				</ul>
 			</div>

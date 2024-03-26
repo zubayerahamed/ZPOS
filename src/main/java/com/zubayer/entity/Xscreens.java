@@ -69,6 +69,9 @@ public class Xscreens extends AbstractModel<Integer> {
 	@Column(name = "xicon", length = 50)
 	private String xicon;
 
+	@Column(name = "pxscreen", length = 10)
+	private String pxscreen;
+
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 
