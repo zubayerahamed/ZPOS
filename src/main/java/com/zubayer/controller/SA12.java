@@ -69,6 +69,11 @@ public class SA12 extends AbstractBaseController {
 	public String loadFormFragment(@PathVariable String xscreen, Model model) {
 		if("RESET".equalsIgnoreCase(xscreen)) {
 			model.addAttribute("xscreens", Xscreens.getDefaultInstance());
+
+			List<Xscreens> menus = xscreensRepo.findAllByZidAndXtypeIn(sessionManager.getBusinessId(), Arrays.asList("Screen", "Module"));
+			menus.sort(Comparator.comparing(Xscreens::getXsequence));
+			model.addAttribute("pxscreens", menus);
+
 			return "pages/SA12/SA12-fragments::main-form";
 		}
 
