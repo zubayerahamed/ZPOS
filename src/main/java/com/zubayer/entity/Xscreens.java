@@ -1,5 +1,7 @@
 package com.zubayer.entity;
 
+import java.util.List;
+
 import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.enums.SubmitFor;
 
@@ -71,6 +73,9 @@ public class Xscreens extends AbstractModel<Integer> {
 
 	@Column(name = "pxscreen", length = 10)
 	private String pxscreen;
+
+	@Transient
+	private List<Xscreens> subMenus;
 
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;

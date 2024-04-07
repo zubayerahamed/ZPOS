@@ -149,17 +149,26 @@
 				<ul class="nav nav-sidebar" data-nav-type="accordion">
 
 					<!-- Main -->
-					<li class="nav-item-header pt-0">
-						<div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide">Main</div>
-						<i class="ph-dots-three sidebar-resize-show"></i>
-					</li>
-					<li class="nav-item" th:each="menu : ${sidebarMenus}">
+					<div th:each="module : ${sidebarMenus}">
+						<li class="nav-item-header pt-0">
+							<div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide" th:text="${module.xtitle}">Main</div>
+							<i class="ph-dots-three sidebar-resize-show"></i>
+						</li>
+
+						<li class="nav-item" th:each="menu : ${module.subMenus}">
+							<a th:href="@{/} + ${menu.xscreen}" th:attr="id=${menu.xscreen}" class="nav-link side-nav-link">
+								<i th:classappend="${#strings.isEmpty(menu.xicon) ? 'ph-house' : menu.xicon}"></i>
+								<span th:text="${menu.xscreen + ' - ' + menu.xtitle}"></span>
+							</a>
+						</li>
+					</div>
+					<!--<li class="nav-item" th:each="menu : ${sidebarMenus}">
 						<a th:href="@{/} + ${menu.xscreen}" th:attr="id=${menu.xscreen}" class="nav-link side-nav-link">
 							<i th:classappend="${#strings.isEmpty(menu.xicon) ? 'ph-house' : menu.xicon}"></i>
 							<span th:text="${menu.xtitle}"></span>
 						</a>
-					</li>
-					<li class="nav-item nav-item-submenu">
+					</li>-->
+					<!--<li class="nav-item nav-item-submenu">
 						<a href="#" class="nav-link">
 							<i class="ph-layout"></i>
 							<span>Layouts</span>
@@ -173,7 +182,7 @@
 							<li class="nav-item"><a href="../../layout_6/full/index.html" class="nav-link">Layout 6</a></li>
 							<li class="nav-item"><a href="../../layout_7/full/index.html" class="nav-link disabled">Layout 7 <span class="badge align-self-center ms-auto">Coming soon</span></a></li>
 						</ul>
-					</li>
+					</li>-->
 
 				</ul>
 			</div>

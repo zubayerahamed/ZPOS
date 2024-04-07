@@ -41,8 +41,11 @@ public class Zbusiness extends AbstractModel<Integer> {
 	@Column(name = "xmadd", length = 200)
 	private String xmadd;
 
-	@Column(name = "zpassword", length = 25)
-	private String zpassword;
+	@Column(name = "country", length = 100)
+	private String country;
+
+	@Column(name = "currency", length = 3)
+	private String currency;
 
 	@Lob
 	@Column(name = "xlogo")

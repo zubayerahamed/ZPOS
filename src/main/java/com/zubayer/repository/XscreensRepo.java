@@ -21,6 +21,8 @@ import jakarta.transaction.Transactional;
 public interface XscreensRepo extends JpaRepository<Xscreens, XscreensPK> {
 
 	public List<Xscreens> findAllByXtypeAndZid(String xtype, Integer zid);
+	public List<Xscreens> findAllByXtypeAndPxscreenAndZid(String xtype, String pxscreen, Integer zid);
+
 	public List<Xscreens> findAllByZidAndXtypeIn(Integer zid, List<String> xtype);
 
 	@Transactional

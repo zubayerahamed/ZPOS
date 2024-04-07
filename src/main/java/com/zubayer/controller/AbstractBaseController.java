@@ -1,17 +1,12 @@
 package com.zubayer.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.zubayer.entity.Profiledt;
 import com.zubayer.entity.Users;
 import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Zbusiness;
@@ -27,6 +22,8 @@ import jakarta.validation.Validator;
  * CSE202101068
  */
 public abstract class AbstractBaseController extends BaseController {
+
+	protected String pageTitle = null;
 
 	@Autowired protected ModelValidator modelValidator;
 	@Autowired protected Validator validator;
@@ -60,33 +57,46 @@ public abstract class AbstractBaseController extends BaseController {
 
 	@ModelAttribute("sidebarMenus")
 	protected List<Xscreens> menusList(){
-		List<Xscreens> list = xscreensRepo.findAllByXtypeAndZid("Screen", sessionManager.getBusinessId());
+		List<Xscreens> list = xscreensRepo.findAllByXtypeAndZid("Module", sessionManager.getBusinessId());
 		list.sort(Comparator.comparing(Xscreens::getXsequence));
-
-		if(sessionManager.getLoggedInUserDetails().isAdmin()) return list;
-
-		// Filter menus, if uesr dont have access
-		String xprofile = sessionManager.getLoggedInUserDetails().getXprofile();
-		if(StringUtils.isNotBlank(xprofile)) {
-			List<Profiledt> profildtList = profiledtRepo.findAllByXprofileAndZid(xprofile, sessionManager.getBusinessId());
-			if(profildtList == null || profildtList.isEmpty()) return Collections.emptyList();
-
-			// Create a map from full list first
-			Map<String, Xscreens> map = new HashMap<>();
-			for(Xscreens screen : list) {
-				map.put(screen.getXscreen(), screen);
-			}
-
-			List<Xscreens> accessableList = new ArrayList<>();
-			for(Profiledt dt : profildtList) {
-				if(map.get(dt.getXscreen()) != null) {
-					accessableList.add(map.get(dt.getXscreen()));
-				}
-			}
-
-			accessableList.sort(Comparator.comparing(Xscreens::getXsequence));
-			return accessableList;
-		}
+		
+		
+		list.forEach(f -> {
+			List<Xscreens> menuLists = xscreensRepo.findAllByXtypeAndPxscreenAndZid("Screen", f.getXscreen(), sessionManager.getBusinessId());
+			f.setSubMenus(menuLists);
+			f.getSubMenus().sort(Comparator.comparing(Xscreens::getXsequence));
+		});
+		
+		
+		
+		
+//		List<Xscreens> list = xscreensRepo.findAllByXtypeAndZid("Screen", sessionManager.getBusinessId());
+//		list.sort(Comparator.comparing(Xscreens::getXsequence));
+//
+//		if(sessionManager.getLoggedInUserDetails().isAdmin()) return list;
+//
+//		// Filter menus, if uesr dont have access
+//		String xprofile = sessionManager.getLoggedInUserDetails().getXprofile();
+//		if(StringUtils.isNotBlank(xprofile)) {
+//			List<Profiledt> profildtList = profiledtRepo.findAllByXprofileAndZid(xprofile, sessionManager.getBusinessId());
+//			if(profildtList == null || profildtList.isEmpty()) return Collections.emptyList();
+//
+//			// Create a map from full list first
+//			Map<String, Xscreens> map = new HashMap<>();
+//			for(Xscreens screen : list) {
+//				map.put(screen.getXscreen(), screen);
+//			}
+//
+//			List<Xscreens> accessableList = new ArrayList<>();
+//			for(Profiledt dt : profildtList) {
+//				if(map.get(dt.getXscreen()) != null) {
+//					accessableList.add(map.get(dt.getXscreen()));
+//				}
+//			}
+//
+//			accessableList.sort(Comparator.comparing(Xscreens::getXsequence));
+//			return accessableList;
+//		}
 
 		return list;
 	}

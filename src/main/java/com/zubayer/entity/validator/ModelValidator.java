@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import com.zubayer.entity.Xscreens;
+import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.enums.SubmitFor;
 import com.zubayer.repository.XscreensRepo;
@@ -22,6 +23,11 @@ public class ModelValidator extends ConstraintValidator {
 
 	@Autowired private XscreensRepo xscreensRepo;
 	@Autowired private ZSessionManager sessionManager;
+
+	public void validateZbusiness(Zbusiness zbusiness, Errors errors, Validator validator) {
+		if(zbusiness == null) return;
+		super.validate(zbusiness, errors, validator);
+	}
 
 	public void validateXscreens(Xscreens xscreens, Errors errors, Validator validator) {
 		if(xscreens == null) return;
