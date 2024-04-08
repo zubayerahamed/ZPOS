@@ -1,0 +1,112 @@
+<div th:fragment="main-form" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div class="card-body">
+			<div class="row">
+
+				<div class="col-md-4">
+					<form id="mainform" class="form-validate-jquery" th:action="@{/AD12/store}" th:object="${shop}" method="POST">
+						<input type="hidden" th:field="*{submitFor}"/>
+						<input type="hidden" th:if="${shop.id ne null}" th:field="*{id}">
+						<input type="hidden" th:if="${shop.id ne null}" th:field="*{outletId}">
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Shop Name</label>
+									<input type="text" class="form-control" th:field="*{xname}" required="required">
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Shop Name</label>
+									<select class="form-control select" th:field="*{outletId}" required>
+										<option value="">-- Select Outlet --</option>
+										<option th:each="outlet : ${outlets}" th:value="${outlet.id}" th:text="${outlet.xname}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label d-block" for="zactive">Is Active?</label>
+									<input type="checkbox" id="zactive" th:field="*{zactive}">
+								</div>
+							</div>
+						</div>
+
+						<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<button type="reset" th:attr="data-reloadurl='/AD12?id=RESET&outletid=RESET', data-reloadid='main-form-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
+							</div>
+							<div>
+								<button th:if="${shop.id ne null}" th:attr="data-url=@{/AD12?id=} + ${shop.id} + '&outletid=' + ${shop.outletId}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
+								<button th:if="${shop.id ne null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
+								<button th:if="${shop.id eq null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Add</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-1 mt-5"></div>
+				<div class="col-md-7">
+					<h3>List of shops</h3>
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>shop</th>
+									<th>Outlet</th>
+									<th class="text-center">Active?</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="x : ${shops}">
+									<td>
+										<a class="detail-dataindex" th:attr="data-reloadid='main-form-container', data-reloadurl='/AD12?id=' + ${x.id} + '&outletid=' + ${x.outletId}" th:href="@{/AD12?id=} + ${x.id} + '&outletid=' + ${x.outletId}" th:text="${x.xname}"></a>
+									</td>
+									<td th:text="${x.outletName}"></td>
+									<td class="text-center" th:text="${x.zactive ? 'Y' : 'N'}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+
+			$('.btn-reset').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('.btn-submit').off('click').on('click', function(e){
+				e.preventDefault();
+				submitMainForm();
+			});
+
+			$('.btn-delete').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+
+			$('a.detail-dataindex').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+		})
+	</script>
+</div>

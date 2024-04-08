@@ -44,7 +44,7 @@ public class AD10 extends AbstractBaseController {
 	protected String pageTitle() {
 		if(this.pageTitle != null) return this.pageTitle;
 		Optional<Xscreens> op = xscreensRepo.findById(new XscreensPK(sessionManager.getBusinessId(), "AD10"));
-		if(!op.isPresent()) return "Business Profile Management";
+		if(!op.isPresent()) return "";
 		this.pageTitle = op.get().getXtitle();
 		return this.pageTitle;
 	}
@@ -96,9 +96,9 @@ public class AD10 extends AbstractBaseController {
 
 		Zbusiness existObj = op.get();
 		if(imageChanged) {
-			BeanUtils.copyProperties(zbusiness, existObj, "zid", "zactive", "zuserid", "ztime", "businessType");
+			BeanUtils.copyProperties(zbusiness, existObj, "zid", "zactive", "createdBy", "createdOn", "businessType");
 		} else {
-			BeanUtils.copyProperties(zbusiness, existObj, "zid", "zactive", "xlogo", "zuserid", "ztime", "businessType");
+			BeanUtils.copyProperties(zbusiness, existObj, "zid", "zactive", "xlogo", "createdBy", "createdOn", "businessType");
 		}
 		existObj = businessRepo.save(existObj);
 

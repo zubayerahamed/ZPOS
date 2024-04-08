@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+import com.zubayer.entity.Outlet;
+import com.zubayer.entity.Shop;
 import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.pk.XscreensPK;
@@ -27,6 +29,16 @@ public class ModelValidator extends ConstraintValidator {
 	public void validateZbusiness(Zbusiness zbusiness, Errors errors, Validator validator) {
 		if(zbusiness == null) return;
 		super.validate(zbusiness, errors, validator);
+	}
+
+	public void validateOutlet(Outlet outlet, Errors errors, Validator validator) {
+		if(outlet == null) return;
+		super.validate(outlet, errors, validator);
+	}
+
+	public void validateShop(Shop shop, Errors errors, Validator validator) {
+		if(shop == null) return;
+		super.validate(shop, errors, validator);
 	}
 
 	public void validateXscreens(Xscreens xscreens, Errors errors, Validator validator) {
