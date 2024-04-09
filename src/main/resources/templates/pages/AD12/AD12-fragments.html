@@ -12,14 +12,14 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="mb-3 form-group">
-									<label class="form-label">Shop Name</label>
+									<label class="form-label">Terminal Name</label>
 									<input type="text" class="form-control" th:field="*{xname}" required="required">
 								</div>
 							</div>
 							<div class="col-md-12">
 								<div class="mb-3 form-group">
-									<label class="form-label">Shop Name</label>
-									<select class="form-control select" th:field="*{outletId}" required>
+									<label class="form-label">Outlet</label>
+									<select class="form-control select" th:field="*{outletId}" th:disabled="${shop.id ne null}" required>
 										<option value="">-- Select Outlet --</option>
 										<option th:each="outlet : ${outlets}" th:value="${outlet.id}" th:text="${outlet.xname}"></option>
 									</select>
@@ -48,21 +48,20 @@
 				<div class="col-md-1 mt-5"></div>
 				<div class="col-md-7">
 					<h3>List of shops</h3>
-					<div class="table-responsive">
+					<div class="table-responsive" th:each="entry : ${shopsMap}">
+						<h6 class="p-0 mt-4 mb-0" th:text="'Outlet : ' + ${entry.key}"></h6>
 						<table class="table">
 							<thead>
 								<tr>
-									<th>shop</th>
-									<th>Outlet</th>
+									<th>Shop</th>
 									<th class="text-center">Active?</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="x : ${shops}">
+								<tr th:each="x : ${entry.value}">
 									<td>
 										<a class="detail-dataindex" th:attr="data-reloadid='main-form-container', data-reloadurl='/AD12?id=' + ${x.id} + '&outletid=' + ${x.outletId}" th:href="@{/AD12?id=} + ${x.id} + '&outletid=' + ${x.outletId}" th:text="${x.xname}"></a>
 									</td>
-									<td th:text="${x.outletName}"></td>
 									<td class="text-center" th:text="${x.zactive ? 'Y' : 'N'}"></td>
 								</tr>
 							</tbody>

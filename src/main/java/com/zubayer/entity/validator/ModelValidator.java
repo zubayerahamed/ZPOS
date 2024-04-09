@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 
 import com.zubayer.entity.Outlet;
 import com.zubayer.entity.Shop;
+import com.zubayer.entity.Terminal;
 import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.pk.XscreensPK;
@@ -39,6 +40,11 @@ public class ModelValidator extends ConstraintValidator {
 	public void validateShop(Shop shop, Errors errors, Validator validator) {
 		if(shop == null) return;
 		super.validate(shop, errors, validator);
+	}
+
+	public void validateTerminal(Terminal terminal, Errors errors, Validator validator) {
+		if(terminal == null) return;
+		super.validate(terminal, errors, validator);
 	}
 
 	public void validateXscreens(Xscreens xscreens, Errors errors, Validator validator) {

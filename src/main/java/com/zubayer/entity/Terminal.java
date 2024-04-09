@@ -1,6 +1,7 @@
 package com.zubayer.entity;
 
 import com.zubayer.entity.pk.TerminalPK;
+import com.zubayer.enums.SubmitFor;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -46,8 +48,23 @@ public class Terminal extends AbstractModel<Integer> {
 	private Integer id;
 
 	@Column(name = "xname", length = 100)
-	private Integer xname;
+	private String xname;
 
 	@Column(name = "zactive", length = 1)
 	private Boolean zactive = Boolean.TRUE;
+
+	@Transient
+	private String outletName;
+
+	@Transient
+	private String shopName;
+
+	@Transient
+	private SubmitFor submitFor = SubmitFor.UPDATE;
+
+	public static Terminal getDefaultInstance() {
+		Terminal obj = new Terminal();
+		obj.setSubmitFor(SubmitFor.INSERT);
+		return obj;
+	}
 }

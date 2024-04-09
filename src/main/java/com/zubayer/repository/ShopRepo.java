@@ -17,4 +17,6 @@ import com.zubayer.entity.pk.ShopPK;
 public interface ShopRepo extends JpaRepository<Shop, ShopPK>{
 
 	List<Shop> findAllByZid(Integer zid);
+
+	List<Shop> findAllByZidAndOutletId(Integer zid, Integer outletId);
 }

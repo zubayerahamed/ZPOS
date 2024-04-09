@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,14 +63,17 @@ public class AD12 extends AbstractBaseController {
 				f.setOutletName(outletOp.get().getXname());
 			}
 		});
-		model.addAttribute("shops", shops);
+
+		Map<String, List<Shop>> shopMap = shops.stream().collect(Collectors.groupingBy(Shop::getOutletName));
+		model.addAttribute("shopsMap", shopMap);
 
 		List<Outlet> outlets = outletRepo.findAllByZid(sessionManager.getBusinessId());
+		outlets = outlets.stream().filter(o -> o.getZactive().equals(Boolean.TRUE)).collect(Collectors.toList());
 		outlets.sort(Comparator.comparing(Outlet::getXname));
 		model.addAttribute("outlets", outlets);
 
 		if(isAjaxRequest(request)) {
-			if("RESET".equalsIgnoreCase(id) && "RESET".equalsIgnoreCase(outletid)) {
+			if("RESET".equalsIgnoreCase(id)) {
 				model.addAttribute("shop", Shop.getDefaultInstance());
 				return "pages/AD12/AD12-fragments::main-form";
 			}
