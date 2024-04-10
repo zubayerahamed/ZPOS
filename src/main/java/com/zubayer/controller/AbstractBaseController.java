@@ -59,45 +59,24 @@ public abstract class AbstractBaseController extends BaseController {
 	protected List<Xscreens> menusList(){
 		List<Xscreens> list = xscreensRepo.findAllByXtypeAndZid("Module", sessionManager.getBusinessId());
 		list.sort(Comparator.comparing(Xscreens::getXsequence));
-		
-		
-		list.forEach(f -> {
-			List<Xscreens> menuLists = xscreensRepo.findAllByXtypeAndPxscreenAndZid("Screen", f.getXscreen(), sessionManager.getBusinessId());
-			f.setSubMenus(menuLists);
-			f.getSubMenus().sort(Comparator.comparing(Xscreens::getXsequence));
-		});
-		
-		
-		
-		
-//		List<Xscreens> list = xscreensRepo.findAllByXtypeAndZid("Screen", sessionManager.getBusinessId());
-//		list.sort(Comparator.comparing(Xscreens::getXsequence));
-//
-//		if(sessionManager.getLoggedInUserDetails().isAdmin()) return list;
-//
-//		// Filter menus, if uesr dont have access
-//		String xprofile = sessionManager.getLoggedInUserDetails().getXprofile();
-//		if(StringUtils.isNotBlank(xprofile)) {
-//			List<Profiledt> profildtList = profiledtRepo.findAllByXprofileAndZid(xprofile, sessionManager.getBusinessId());
-//			if(profildtList == null || profildtList.isEmpty()) return Collections.emptyList();
-//
-//			// Create a map from full list first
-//			Map<String, Xscreens> map = new HashMap<>();
-//			for(Xscreens screen : list) {
-//				map.put(screen.getXscreen(), screen);
-//			}
-//
-//			List<Xscreens> accessableList = new ArrayList<>();
-//			for(Profiledt dt : profildtList) {
-//				if(map.get(dt.getXscreen()) != null) {
-//					accessableList.add(map.get(dt.getXscreen()));
-//				}
-//			}
-//
-//			accessableList.sort(Comparator.comparing(Xscreens::getXsequence));
-//			return accessableList;
-//		}
+
+//		list.forEach(f -> {
+//			List<Xscreens> menuLists = xscreensRepo.findAllByXtypeAndPxscreenAndZid("Screen", f.getXscreen(), sessionManager.getBusinessId());
+//			f.setSubMenus(menuLists);
+//			f.getSubMenus().sort(Comparator.comparing(Xscreens::getXsequence));
+//		});
+		subMenuBuilder(list);
 
 		return list;
+	}
+
+	private void subMenuBuilder(List<Xscreens> list) {
+		for(Xscreens screen : list) {
+			List<Xscreens> menuLists = xscreensRepo.findAllByXtypeAndPxscreenAndZid("Screen", screen.getXscreen(), sessionManager.getBusinessId());
+			screen.setSubMenus(menuLists);
+			screen.getSubMenus().sort(Comparator.comparing(Xscreens::getXsequence));
+
+			subMenuBuilder(screen.getSubMenus());
+		}
 	}
 }

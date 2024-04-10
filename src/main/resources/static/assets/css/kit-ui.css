@@ -3,7 +3,7 @@
 }
 
 .form-control:disabled {
-	background-color: #dbdbdb;
+	background-color: #dbdbdb !important;
 }
 
 table{

@@ -149,40 +149,31 @@
 				<ul class="nav nav-sidebar" data-nav-type="accordion">
 
 					<!-- Main -->
-					<div th:each="module : ${sidebarMenus}">
+					<div th:remove="tag" th:each="module : ${sidebarMenus}">
 						<li class="nav-item-header pt-0">
 							<div class="text-uppercase fs-sm lh-sm opacity-50 sidebar-resize-hide" th:text="${module.xtitle}">Main</div>
 							<i class="ph-dots-three sidebar-resize-show"></i>
 						</li>
 
-						<li class="nav-item" th:each="menu : ${module.subMenus}">
-							<a th:href="@{/} + ${menu.xscreen}" th:attr="id=${menu.xscreen}" class="nav-link side-nav-link">
-								<i th:classappend="${#strings.isEmpty(menu.xicon) ? 'ph-house' : menu.xicon}"></i>
-								<span th:text="${menu.xscreen + ' - ' + menu.xtitle}"></span>
-							</a>
-						</li>
+						<div th:remove="tag" th:each="menu : ${module.subMenus}">
+							<li class="nav-item" th:if="${#lists.isEmpty(menu.subMenus)}">
+								<a th:href="@{/} + ${menu.xscreen}" th:attr="id=${menu.xscreen}" class="nav-link side-nav-link">
+									<i th:classappend="${#strings.isEmpty(menu.xicon) ? 'ph-house' : menu.xicon}"></i>
+									<span th:text="${menu.xscreen + ' - ' + menu.xtitle}"></span>
+								</a>
+							</li>
+
+							<li class="nav-item nav-item-submenu" th:if="${not #lists.isEmpty(menu.subMenus)}">
+								<a href="#" class="nav-link" th:attr="id=${menu.xscreen}">
+									<i th:classappend="${#strings.isEmpty(menu.xicon) ? 'ph-house' : menu.xicon}"></i>
+									<span th:text="${menu.xscreen + ' - ' + menu.xtitle}">Layouts</span>
+								</a>
+								<ul class="nav-group-sub collapse">
+									<li th:each="sub : ${menu.subMenus}" class="nav-item"><a th:href="@{/} + ${sub.xscreen}" class="nav-link" th:text="${sub.xscreen + ' - ' + sub.xtitle}">Default layout</a></li>
+								</ul>
+							</li>
+						</div>
 					</div>
-					<!--<li class="nav-item" th:each="menu : ${sidebarMenus}">
-						<a th:href="@{/} + ${menu.xscreen}" th:attr="id=${menu.xscreen}" class="nav-link side-nav-link">
-							<i th:classappend="${#strings.isEmpty(menu.xicon) ? 'ph-house' : menu.xicon}"></i>
-							<span th:text="${menu.xtitle}"></span>
-						</a>
-					</li>-->
-					<!--<li class="nav-item nav-item-submenu">
-						<a href="#" class="nav-link">
-							<i class="ph-layout"></i>
-							<span>Layouts</span>
-						</a>
-						<ul class="nav-group-sub collapse">
-							<li class="nav-item"><a href="index.html" class="nav-link active">Default layout</a></li>
-							<li class="nav-item"><a href="../../layout_2/full/index.html" class="nav-link">Layout 2</a></li>
-							<li class="nav-item"><a href="../../layout_3/full/index.html" class="nav-link">Layout 3</a></li>
-							<li class="nav-item"><a href="../../layout_4/full/index.html" class="nav-link">Layout 4</a></li>
-							<li class="nav-item"><a href="../../layout_5/full/index.html" class="nav-link">Layout 5</a></li>
-							<li class="nav-item"><a href="../../layout_6/full/index.html" class="nav-link">Layout 6</a></li>
-							<li class="nav-item"><a href="../../layout_7/full/index.html" class="nav-link disabled">Layout 7 <span class="badge align-self-center ms-auto">Coming soon</span></a></li>
-						</ul>
-					</li>-->
 
 				</ul>
 			</div>
