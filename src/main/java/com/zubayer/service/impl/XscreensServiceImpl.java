@@ -70,11 +70,4 @@ public class XscreensServiceImpl extends AbstractService implements XscreensServ
 				+ searchText + "%' OR xsequence LIKE '%" + searchText + "%') ");
 	}
 
-	private StringBuilder orderbyClause(String orderByField, String orderType) {
-		return new StringBuilder(" ORDER BY " + orderByField + " " + orderType + " ");
-	}
-
-	private StringBuilder limitAndOffsetClause(int limit, int offset) {
-		return new StringBuilder(" OFFSET "+offset+" ROWS FETCH NEXT "+limit+" ROWS ONLY ");
-	}
 }

@@ -8,15 +8,16 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Zubayer Ahamed
- * @since Apr 26, 2024
- * CSE202101068
+ * @since May 10, 2024
+ * CSE202401068
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddOnsPK implements Serializable {
-	private static final long serialVersionUID = 8596854636440960562L;
+public class VariationPK implements Serializable {
+
+	private static final long serialVersionUID = 540604996736283744L;
 
 	private Integer zid;
-	private Integer xcode;
+	private String xcode;
 }

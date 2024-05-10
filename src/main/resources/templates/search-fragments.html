@@ -1,0 +1,230 @@
+<div th:fragment="search-hidden-fields" xmlns:th="http://www.thymeleaf.org">
+	<input type="hidden" id="searchValue" th:value="${searchValue}"/>
+	<input type="hidden" id="fieldId" th:value="${fieldId}"/>
+	<input type="hidden" id="suffix" th:value="${suffix}"/>
+	<input type="hidden" id="mainscreen" th:value="${mainscreen}"/>
+	<input type="hidden" id="mainreloadurl" th:value="${mainreloadurl}"/>
+	<input type="hidden" id="mainreloadid" th:value="${mainreloadid}"/>
+	<input type="hidden" id="detailreloadid" th:value="${detailreloadid}"/>
+	<input type="hidden" id="detailreloadurl" th:value="${detailreloadurl}"/>
+	<input type="hidden" id="additionalreloadid" th:value="${additionalreloadid}"/>
+	<input type="hidden" id="additionalreloadurl" th:value="${additionalreloadurl}"/>
+	<input type="hidden" id="extrafieldcontroller" th:value="${extrafieldcontroller}"/>
+	<input type="hidden" id="dependentParam" th:value="${dependentParam}"/>
+	<input type="hidden" id="resetParam" th:value="${resetParam}"/>
+</div>
+
+
+<div th:fragment="LMD13-table" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div th:remove="tag" th:include="search-fragments :: search-hidden-fields"></div>
+
+		<div class="table-responsive">
+			<table class="table searchdatatable">
+				<thead>
+					<tr>
+						<th>Code</th>
+						<th>Category Name</th>
+						<th>Parent Category</th>
+						<th>Active?</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			kit.ui.init();
+
+			var fieldId = $('#fieldId').val();
+			var suffix = $('#suffix').val();
+			var mainscreen = $('#mainscreen').val();
+			var mainreloadurl = $('#mainreloadurl').val();
+			var mainreloadid = $('#mainreloadid').val();
+			var detailreloadurl = $('#detailreloadurl').val();
+			var detailreloadid = $('#detailreloadid').val();
+			var dependentParam = $('#dependentParam').val();
+			var resetParam = $('#resetParam').val();
+
+			var dt = $('.searchdatatable').DataTable({
+				"deferLoading": true,
+				"processing" : true,
+				"serverSide" : true,
+				"order" : [0, 'desc'],
+				"columnDefs": [
+					{ "name": "xcode",   "targets": 0 },
+					{ "name": "xname",  "targets": 1 },
+					{ "name": "xpcode",  "targets": 2 },
+					{ "name": "zactive",  "targets": 3 },
+				],
+				"ajax" : getBasepath() + "/search/LMD13/" + suffix + '?dependentParam=' + (dependentParam == undefined ? '' : dependentParam),
+				"columns": [
+					{ 
+						"data": "xcode",
+						render: function(data, type, row, meta) {
+							return "<a style='text-decoration: underline; cursor: pointer;' class='dataindex' href='#' data-value='"+data+"' data-prompt='"+ data + " - " +  row['xname'] +"'>" + data + "</a>";
+						}
+					},
+					{ "data": "xname" },
+					{ 
+						"data": "xpcode",
+						render: function(data, type, row, meta) {
+							return data == '' || data == null ? '' : data + ' - ' + row['parentCategory'] ;
+						}
+					},
+					{ 
+						"data": "zactive",
+						"class": 'text-center',
+						render: function(data, type) {
+							return data == true ? 'Y' : 'N';
+						}
+					}
+				],
+				"search": {
+					"search": $("#searchValue").val()
+				}
+			});
+
+			//make ajax to call server
+			dt.draw();
+
+			$('.searchdatatable').on('click', 'a.dataindex', function(e){
+				e.preventDefault();
+
+				if(mainscreen == 'true'){
+					$('#searchSuggestTableModal').modal('hide');
+
+					var value = $(this).data('value');
+
+					sectionReloadAjaxReq({
+						id : mainreloadid,
+						url : mainreloadurl + value
+					});
+
+					if(detailreloadid){
+						sectionReloadAjaxReq({
+							id : detailreloadid,
+							url : detailreloadurl + value
+						});
+					}
+				} else {
+					var prompt = $(this).data('prompt');
+					var value = $(this).data('value');
+
+					$('#searchSuggestTableModal').modal('hide');
+
+					$('input[name="'+ fieldId +'"]').val(value);
+					$('#' + fieldId).val(prompt);
+				}
+			})
+		})
+	</script>
+</div>
+
+
+
+<div th:fragment="LMD14-table" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div th:remove="tag" th:include="search-fragments :: search-hidden-fields"></div>
+
+		<div class="table-responsive">
+			<table class="table searchdatatable">
+				<thead>
+					<tr>
+						<th>Code</th>
+						<th>Addon Name</th>
+						<th>Price</th>
+						<th>Active?</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			kit.ui.init();
+
+			var fieldId = $('#fieldId').val();
+			var suffix = $('#suffix').val();
+			var mainscreen = $('#mainscreen').val();
+			var mainreloadurl = $('#mainreloadurl').val();
+			var mainreloadid = $('#mainreloadid').val();
+			var detailreloadurl = $('#detailreloadurl').val();
+			var detailreloadid = $('#detailreloadid').val();
+			var dependentParam = $('#dependentParam').val();
+			var resetParam = $('#resetParam').val();
+
+			var dt = $('.searchdatatable').DataTable({
+				"deferLoading": true,
+				"processing" : true,
+				"serverSide" : true,
+				"order" : [0, 'desc'],
+				"columnDefs": [
+					{ "name": "xcode",   "targets": 0 },
+					{ "name": "xname",  "targets": 1 },
+					{ "name": "xprice",  "targets": 2 },
+					{ "name": "zactive",  "targets": 3 },
+				],
+				"ajax" : getBasepath() + "/search/LMD14/" + suffix + '?dependentParam=' + (dependentParam == undefined ? '' : dependentParam),
+				"columns": [
+					{ 
+						"data": "xcode",
+						render: function(data, type, row, meta) {
+							return "<a style='text-decoration: underline; cursor: pointer;' class='dataindex' href='#' data-value='"+data+"' data-prompt='"+ data + " - " +  row['xname'] +"'>" + data + "</a>";
+						}
+					},
+					{ "data": "xname" },
+					{ "data": "xprice" },
+					{ 
+						"data": "zactive",
+						"class": 'text-center',
+						render: function(data, type) {
+							return data == true ? 'Y' : 'N';
+						}
+					}
+				],
+				"search": {
+					"search": $("#searchValue").val()
+				}
+			});
+
+			//make ajax to call server
+			dt.draw();
+
+			$('.searchdatatable').on('click', 'a.dataindex', function(e){
+				e.preventDefault();
+
+				if(mainscreen == 'true'){
+					$('#searchSuggestTableModal').modal('hide');
+
+					var value = $(this).data('value');
+
+					sectionReloadAjaxReq({
+						id : mainreloadid,
+						url : mainreloadurl + value
+					});
+
+					if(detailreloadid){
+						sectionReloadAjaxReq({
+							id : detailreloadid,
+							url : detailreloadurl + value
+						});
+					}
+				} else {
+					var prompt = $(this).data('prompt');
+					var value = $(this).data('value');
+
+					$('#searchSuggestTableModal').modal('hide');
+
+					$('input[name="'+ fieldId +'"]').val(value);
+					$('#' + fieldId).val(prompt);
+				}
+			})
+		})
+	</script>
+</div>
+

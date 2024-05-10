@@ -18,5 +18,5 @@ public class CategoryPK implements Serializable {
 	private static final long serialVersionUID = 3054549400025858258L;
 
 	private Integer zid;
-	private Integer id;
+	private Integer xcode;
 }
