@@ -1,15 +1,14 @@
 package com.zubayer.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.zubayer.entity.AddOns;
+import com.zubayer.entity.Variation;
 import com.zubayer.enums.DatatableSortOrderType;
-import com.zubayer.service.AddOnsService;
+import com.zubayer.service.VariationService;
 
 /**
  * @author Zubayer Ahamed
@@ -17,43 +16,42 @@ import com.zubayer.service.AddOnsService;
  * CSE202401068
  */
 @Service
-public class AddOnsServiceImpl extends AbstractService implements AddOnsService {
+public class VariationServiceImpl extends AbstractService implements VariationService {
 
 	@Override
-	public List<AddOns> LMD14(int limit, int offset, String orderBy, DatatableSortOrderType orderType, String searchText, int suffix, String dependentParam) {
+	public List<Variation> LMD15(int limit, int offset, String orderBy, DatatableSortOrderType orderType, String searchText, int suffix, String dependentParam) {
 		searchText = sanitizeSearch(searchText);
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(selectClause())
-		.append(fromClause("addons im"))
+		.append(fromClause("variation im"))
 		.append(whereClause(searchText, suffix, dependentParam))
 		.append(orderbyClause(orderBy, orderType.name()))
 		.append(limitAndOffsetClause(limit, offset));
 
 		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql.toString());
-		List<AddOns> list = new ArrayList<>();
+		List<Variation> list = new ArrayList<>();
 		result.stream().forEach(row -> list.add(constractObj(row)));
 
 		return list;
 	}
 
 	@Override
-	public int LMD14(String orderBy, DatatableSortOrderType orderType, String searchText, int suffix, String dependentParam) {
+	public int LMD15(String orderBy, DatatableSortOrderType orderType, String searchText, int suffix, String dependentParam) {
 		searchText = sanitizeSearch(searchText);
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT COUNT(*) ")
-		.append(fromClause("addons im"))
+		.append(fromClause("variation im"))
 		.append(whereClause(searchText, suffix, dependentParam));
 		return jdbcTemplate.queryForObject(sql.toString(), Integer.class);
 	}
 
-	private AddOns constractObj(Map<String, Object> row) {
-		AddOns obj = new AddOns();
+	private Variation constractObj(Map<String, Object> row) {
+		Variation obj = new Variation();
 		obj.setZid((Integer) row.get("zid"));
 		obj.setXcode((Integer) row.get("xcode"));
 		obj.setXname((String) row.get("xname"));
-		obj.setXprice((BigDecimal) row.get("xprice"));
 		obj.setZactive((Boolean) row.get("zactive"));
 		return obj;
 	}

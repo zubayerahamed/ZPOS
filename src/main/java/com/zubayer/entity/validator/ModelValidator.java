@@ -11,12 +11,14 @@ import com.zubayer.entity.Category;
 import com.zubayer.entity.Outlet;
 import com.zubayer.entity.Shop;
 import com.zubayer.entity.Terminal;
+import com.zubayer.entity.Variation;
 import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.enums.SubmitFor;
 import com.zubayer.repository.AddOnsRepo;
 import com.zubayer.repository.CategoryRepo;
+import com.zubayer.repository.VariationRepo;
 import com.zubayer.repository.XscreensRepo;
 import com.zubayer.service.ZSessionManager;
 
@@ -34,10 +36,30 @@ public class ModelValidator extends ConstraintValidator {
 	@Autowired private ZSessionManager sessionManager;
 	@Autowired private CategoryRepo categoryRepo;
 	@Autowired private AddOnsRepo addOnsRepo;
+	@Autowired private VariationRepo vRepo;
 
 	public void validateZbusiness(Zbusiness zbusiness, Errors errors, Validator validator) {
 		if(zbusiness == null) return;
 		super.validate(zbusiness, errors, validator);
+	}
+
+	public void validateVariation(Variation variation, Errors errors, Validator validator) {
+		if(variation == null) return;
+		super.validate(variation, errors, validator);
+		if (errors.hasErrors()) return;
+
+		Optional<Variation> op = vRepo.findByZidAndXname(sessionManager.getBusinessId(), variation.getXname());
+		if(!op.isPresent()) return;
+
+		if(SubmitFor.INSERT.equals(variation.getSubmitFor()) && op.isPresent()) {
+			errors.rejectValue("xname", "Variation Name Already Exist");
+			return;
+		}
+
+		if(SubmitFor.UPDATE.equals(variation.getSubmitFor()) && op.isPresent() && !variation.getXcode().equals(op.get().getXcode())) {
+			errors.rejectValue("xname", "Variation Name Already Exist");
+			return;
+		}
 	}
 
 	public void validateAddOns(AddOns addons, Errors errors, Validator validator) {

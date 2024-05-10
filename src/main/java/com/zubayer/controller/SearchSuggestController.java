@@ -16,10 +16,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Category;
+import com.zubayer.entity.Variation;
 import com.zubayer.model.DatatableRequestHelper;
 import com.zubayer.model.DatatableResponseHelper;
 import com.zubayer.service.AddOnsService;
 import com.zubayer.service.CategoryService;
+import com.zubayer.service.VariationService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -34,6 +36,7 @@ public class SearchSuggestController extends AbstractBaseController {
 
 	@Autowired private CategoryService categoryService;
 	@Autowired private AddOnsService addonsService;
+	@Autowired private VariationService variationService;
 
 	@PostMapping("/table/{fragmentcode}/{suffix}")
 	public String loadHeaderTableFragment(
@@ -94,6 +97,22 @@ public class SearchSuggestController extends AbstractBaseController {
 		int totalRows = addonsService.LMD14(helper.getColumns().get(helper.getOrderColumnNo()).getName(), helper.getOrderType(), helper.getSearchValue(), suffix, dependentParam);
 
 		DatatableResponseHelper<AddOns> response = new DatatableResponseHelper<>();
+		response.setDraw(helper.getDraw());
+		response.setRecordsTotal(totalRows);
+		response.setRecordsFiltered(totalRows);
+		response.setData(list);
+		return response;
+	}
+
+	@GetMapping("/LMD15/{suffix}")
+	public @ResponseBody DatatableResponseHelper<Variation> LMD15(@PathVariable int suffix, @RequestParam(required = false) String dependentParam) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		DatatableRequestHelper helper = new DatatableRequestHelper(request);
+
+		List<Variation> list = variationService.LMD15(helper.getLength(), helper.getStart(), helper.getColumns().get(helper.getOrderColumnNo()).getName(), helper.getOrderType(), helper.getSearchValue(), suffix, dependentParam);
+		int totalRows = variationService.LMD15(helper.getColumns().get(helper.getOrderColumnNo()).getName(), helper.getOrderType(), helper.getSearchValue(), suffix, dependentParam);
+
+		DatatableResponseHelper<Variation> response = new DatatableResponseHelper<>();
 		response.setDraw(helper.getDraw());
 		response.setRecordsTotal(totalRows);
 		response.setRecordsFiltered(totalRows);

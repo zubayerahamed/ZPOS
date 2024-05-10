@@ -59,9 +59,12 @@ public class VariationDetail extends AbstractModel<Integer> {
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 
-	public static VariationDetail getDefaultInstance() {
+	public static VariationDetail getDefaultInstance(Integer xcode) {
 		VariationDetail obj = new VariationDetail();
 		obj.setSubmitFor(SubmitFor.INSERT);
+		obj.setXrow(0);
+		obj.setXcode(xcode);
+		obj.setXprice(BigDecimal.ZERO);
 		return obj;
 	}
 }

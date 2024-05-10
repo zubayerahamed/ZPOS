@@ -19,5 +19,5 @@ public class VariationPK implements Serializable {
 	private static final long serialVersionUID = 540604996736283744L;
 
 	private Integer zid;
-	private String xcode;
+	private Integer xcode;
 }
