@@ -1,5 +1,7 @@
 package com.zubayer.entity.validator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,11 @@ import org.springframework.validation.Errors;
 
 import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Category;
+import com.zubayer.entity.Charge;
 import com.zubayer.entity.Outlet;
 import com.zubayer.entity.Shop;
 import com.zubayer.entity.Terminal;
+import com.zubayer.entity.UOM;
 import com.zubayer.entity.Variation;
 import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Zbusiness;
@@ -18,6 +22,8 @@ import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.enums.SubmitFor;
 import com.zubayer.repository.AddOnsRepo;
 import com.zubayer.repository.CategoryRepo;
+import com.zubayer.repository.ChargeRepo;
+import com.zubayer.repository.UOMRepo;
 import com.zubayer.repository.VariationRepo;
 import com.zubayer.repository.XscreensRepo;
 import com.zubayer.service.ZSessionManager;
@@ -37,10 +43,50 @@ public class ModelValidator extends ConstraintValidator {
 	@Autowired private CategoryRepo categoryRepo;
 	@Autowired private AddOnsRepo addOnsRepo;
 	@Autowired private VariationRepo vRepo;
+	@Autowired private UOMRepo uomRepo;
+	@Autowired private ChargeRepo chargeRepo;
 
 	public void validateZbusiness(Zbusiness zbusiness, Errors errors, Validator validator) {
 		if(zbusiness == null) return;
 		super.validate(zbusiness, errors, validator);
+	}
+
+	public void validateCharge(Charge charge, Errors errors, Validator validator) {
+		if(charge == null) return;
+		super.validate(charge, errors, validator);
+		if (errors.hasErrors()) return;
+
+		Optional<Charge> op = chargeRepo.findByZidAndXtypeAndXrate(sessionManager.getBusinessId(), charge.getXtype(), charge.getXrate().setScale(2, RoundingMode.DOWN));
+		if(!op.isPresent()) return;
+
+		if(SubmitFor.INSERT.equals(charge.getSubmitFor()) && op.isPresent()) {
+			errors.rejectValue("xrate", "Rate Already Exist");
+			return;
+		}
+
+		if(SubmitFor.UPDATE.equals(charge.getSubmitFor()) && op.isPresent() && !charge.getXcode().equals(op.get().getXcode())) {
+			errors.rejectValue("xrate", "Charge Already Exist");
+			return;
+		}
+	}
+
+	public void validateUOM(UOM uom, Errors errors, Validator validator) {
+		if(uom == null) return;
+		super.validate(uom, errors, validator);
+		if (errors.hasErrors()) return;
+
+		Optional<UOM> op = uomRepo.findByZidAndXname(sessionManager.getBusinessId(), uom.getXname());
+		if(!op.isPresent()) return;
+
+		if(SubmitFor.INSERT.equals(uom.getSubmitFor()) && op.isPresent()) {
+			errors.rejectValue("xname", "Unit of Mesarment Already Exist");
+			return;
+		}
+
+		if(SubmitFor.UPDATE.equals(uom.getSubmitFor()) && op.isPresent() && !uom.getXcode().equals(op.get().getXcode())) {
+			errors.rejectValue("xname", "Unit of Mesarment Already Exist");
+			return;
+		}
 	}
 
 	public void validateVariation(Variation variation, Errors errors, Validator validator) {
