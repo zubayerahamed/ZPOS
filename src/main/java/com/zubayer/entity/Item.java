@@ -3,6 +3,7 @@ package com.zubayer.entity;
 import java.math.BigDecimal;
 
 import com.zubayer.entity.pk.ItemPK;
+import com.zubayer.enums.SubmitFor;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -93,4 +94,30 @@ public class Item extends AbstractModel<Integer> {
 
 	@Transient
 	private String imageBase64;
+
+	@Transient
+	private String unit;
+
+	@Transient
+	private String categoryname;
+
+	@Transient
+	private BigDecimal vat;
+
+	@Transient
+	private BigDecimal sd;
+
+	
+
+	@Transient
+	private SubmitFor submitFor = SubmitFor.UPDATE;
+
+	public static Item getDefaultInstance() {
+		Item obj = new Item();
+		obj.setSubmitFor(SubmitFor.INSERT);
+		obj.setXseqn(0);
+		obj.setZactive(true);
+		obj.setXprice(BigDecimal.ZERO);
+		return obj;
+	}
 }

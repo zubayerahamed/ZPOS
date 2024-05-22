@@ -1,6 +1,5 @@
 package com.zubayer.entity.validator;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
 
@@ -11,6 +10,7 @@ import org.springframework.validation.Errors;
 import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Category;
 import com.zubayer.entity.Charge;
+import com.zubayer.entity.Item;
 import com.zubayer.entity.Outlet;
 import com.zubayer.entity.Shop;
 import com.zubayer.entity.Terminal;
@@ -87,6 +87,11 @@ public class ModelValidator extends ConstraintValidator {
 			errors.rejectValue("xname", "Unit of Mesarment Already Exist");
 			return;
 		}
+	}
+
+	public void validateItem(Item item, Errors errors, Validator validator) {
+		if(item == null) return;
+		super.validate(item, errors, validator);
 	}
 
 	public void validateVariation(Variation variation, Errors errors, Validator validator) {

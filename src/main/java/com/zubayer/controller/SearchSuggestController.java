@@ -16,11 +16,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Category;
+import com.zubayer.entity.Item;
 import com.zubayer.entity.Variation;
 import com.zubayer.model.DatatableRequestHelper;
 import com.zubayer.model.DatatableResponseHelper;
 import com.zubayer.service.AddOnsService;
 import com.zubayer.service.CategoryService;
+import com.zubayer.service.ItemService;
 import com.zubayer.service.VariationService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +39,7 @@ public class SearchSuggestController extends AbstractBaseController {
 	@Autowired private CategoryService categoryService;
 	@Autowired private AddOnsService addonsService;
 	@Autowired private VariationService variationService;
+	@Autowired private ItemService itemService;
 
 	@PostMapping("/table/{fragmentcode}/{suffix}")
 	public String loadHeaderTableFragment(
@@ -119,6 +122,24 @@ public class SearchSuggestController extends AbstractBaseController {
 		response.setData(list);
 		return response;
 	}
+
+
+	@GetMapping("/LMD16/{suffix}")
+	public @ResponseBody DatatableResponseHelper<Item> LMD16(@PathVariable int suffix, @RequestParam(required = false) String dependentParam) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		DatatableRequestHelper helper = new DatatableRequestHelper(request);
+
+		List<Item> list = itemService.LMD16(helper.getLength(), helper.getStart(), helper.getColumns().get(helper.getOrderColumnNo()).getName(), helper.getOrderType(), helper.getSearchValue(), suffix, dependentParam);
+		int totalRows = itemService.LMD16(helper.getColumns().get(helper.getOrderColumnNo()).getName(), helper.getOrderType(), helper.getSearchValue(), suffix, dependentParam);
+
+		DatatableResponseHelper<Item> response = new DatatableResponseHelper<>();
+		response.setDraw(helper.getDraw());
+		response.setRecordsTotal(totalRows);
+		response.setRecordsFiltered(totalRows);
+		response.setData(list);
+		return response;
+	}
+
 
 	@Override
 	protected String pageTitle() {
