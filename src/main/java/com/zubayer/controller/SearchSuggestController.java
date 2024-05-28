@@ -18,12 +18,14 @@ import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Category;
 import com.zubayer.entity.Item;
 import com.zubayer.entity.Variation;
+import com.zubayer.entity.Xusers;
 import com.zubayer.model.DatatableRequestHelper;
 import com.zubayer.model.DatatableResponseHelper;
 import com.zubayer.service.AddOnsService;
 import com.zubayer.service.CategoryService;
 import com.zubayer.service.ItemService;
 import com.zubayer.service.VariationService;
+import com.zubayer.service.XusersService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -40,6 +42,7 @@ public class SearchSuggestController extends AbstractBaseController {
 	@Autowired private AddOnsService addonsService;
 	@Autowired private VariationService variationService;
 	@Autowired private ItemService itemService;
+	@Autowired private XusersService xusersService;
 
 	@PostMapping("/table/{fragmentcode}/{suffix}")
 	public String loadHeaderTableFragment(
@@ -73,6 +76,22 @@ public class SearchSuggestController extends AbstractBaseController {
 		model.addAttribute("additionalreloadurl", additionalreloadurl);
 		model.addAttribute("additionalreloadid", additionalreloadid);
 		return "search-fragments::" + fragmentcode + "-table";
+	}
+
+	@GetMapping("/LAD17/{suffix}")
+	public @ResponseBody DatatableResponseHelper<Xusers> LAD17(@PathVariable int suffix, @RequestParam(required = false) String dependentParam) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		DatatableRequestHelper helper = new DatatableRequestHelper(request);
+
+		List<Xusers> list = xusersService.LAD17(helper.getLength(), helper.getStart(), helper.getColumns().get(helper.getOrderColumnNo()).getName(), helper.getOrderType(), helper.getSearchValue(), suffix, dependentParam);
+		int totalRows = xusersService.LAD17(helper.getColumns().get(helper.getOrderColumnNo()).getName(), helper.getOrderType(), helper.getSearchValue(), suffix, dependentParam);
+
+		DatatableResponseHelper<Xusers> response = new DatatableResponseHelper<>();
+		response.setDraw(helper.getDraw());
+		response.setRecordsTotal(totalRows);
+		response.setRecordsFiltered(totalRows);
+		response.setData(list);
+		return response;
 	}
 
 	@GetMapping("/LMD13/{suffix}")

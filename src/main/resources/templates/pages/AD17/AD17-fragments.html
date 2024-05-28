@@ -2,27 +2,27 @@
 	<div class="card">
 
 		<div class="card-body">
-			<form id="mainform" class="form-validate-jquery" th:action="@{/AD17/store}" th:object="${addons}" method="POST">
+			<form id="mainform" class="form-validate-jquery" th:action="@{/AD17/store}" th:object="${xusers}" method="POST">
 				<input type="hidden" th:field="*{submitFor}"/>
-				<input type="hidden" th:if="${addons.xcode ne null}" th:field="*{xcode}">
+				<input type="hidden" th:if="${xusers.xusername ne null}" th:field="*{xusername}">
 
 				<div class="row">
 					<div class="col-md-3">
 						<div class="mb-3 form-group">
-							<label class="form-label">Code</label>
+							<label class="form-label">UserID</label>
 							<div class="input-group">
 								<input 	type="text" 
 										class="form-control searchsuggest2"
-										name="xcode"
-										th:value="${addons.xcode != null ? addons.xcode : ''}"
+										name="xusername"
+										th:value="${xusers.xusername != null ? xusers.xusername : ''}"
 										disabled="disabled">
 								<span 	class="input-group-text btn-search" 
 										th:attr="
 										data-reloadurl='/search/table/LAD17/0?hint=', 
 										data-reloadid='search-suggest-results-container', 
-										data-fieldid='xcode',
+										data-fieldid='xusername',
 										data-mainscreen=true,
-										data-mainreloadurl='/AD17?xcode=',
+										data-mainreloadurl='/AD17?xusername=',
 										data-mainreloadid='main-form-container'"
 										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
 							</div>
@@ -30,14 +30,23 @@
 					</div>
 					<div class="col-md-3">
 						<div class="mb-3 form-group">
-							<label class="form-label">Addons Name</label>
-							<input type="text" class="form-control" th:field="*{xname}" required="required">
+							<label class="form-label">Display Name</label>
+							<input type="text" class="form-control" th:field="*{xdisplayname}" required="required">
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="mb-3 form-group">
-							<label class="form-label">Price</label>
-							<input type="number" class="form-control numeric-only" th:field="*{xprice}" min="0" step="1">
+							<label class="form-label">Password</label>
+							<input type="text" class="form-control" th:field="*{xpassword}" required="required">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">Role</label>
+							<select class="form-control select" th:field="*{xrole}" required>
+								<option value="">-- Select --</option>
+								<option th:each="r : ${T(com.zubayer.enums.POSRole).values()}" th:value="${r}" th:text="${r}"></option>
+							</select>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -50,12 +59,12 @@
 
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
-						<button type="reset" th:attr="data-reloadurl='/AD17?xcode=RESET', data-reloadid='main-form-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
+						<button type="reset" th:attr="data-reloadurl='/AD17?xusername=RESET', data-reloadid='main-form-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
 					</div>
 					<div>
-						<button th:if="${addons.xcode ne null}" th:attr="data-url=@{/AD17?xcode=} + ${addons.xcode}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
-						<button th:if="${addons.xcode ne null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
-						<button th:if="${addons.xcode eq null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Add</button>
+						<button th:if="${xusers.xusername ne null}" th:attr="data-url=@{/AD17?xusername=} + ${xusers.xusername}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
+						<button th:if="${xusers.xusername ne null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
+						<button th:if="${xusers.xusername eq null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Add</button>
 					</div>
 				</div>
 			</form>

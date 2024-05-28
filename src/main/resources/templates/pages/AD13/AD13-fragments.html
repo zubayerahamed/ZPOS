@@ -31,6 +31,12 @@
 									<div th:remove="tag" th:include="pages/AD13/AD13-fragments :: shopid-field"></div>
 								</div>
 							</div>
+							<div class="col-md-12" th:if="${poskey}">
+								<div class="mb-3 form-group">
+									<label class="form-label">Offline POS Key</label>
+									<input type="text" class="form-control" th:value="${poskey}" disabled>
+								</div>
+							</div>
 							<div class="col-md-3">
 								<div class="mb-3 form-group">
 									<label class="form-label d-block" for="zactive">Is Active?</label>

@@ -33,6 +33,7 @@ import com.zubayer.model.ReloadSection;
 import com.zubayer.repository.OutletRepo;
 import com.zubayer.repository.ShopRepo;
 import com.zubayer.repository.TerminalRepo;
+import com.zubayer.util.POSUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -92,6 +93,9 @@ public class AD13 extends AbstractBaseController {
 				model.addAttribute("terminal", Shop.getDefaultInstance());
 			}
 
+			// Offline POS key
+			String poskey = POSUtil.generatePOSKey(sessionManager.getBusinessId(), terminalOp.get().getOutletId(), terminalOp.get().getShopId(), terminalOp.get().getId());
+			model.addAttribute("poskey", poskey);
 			model.addAttribute("terminal", terminalOp.get());
 
 			List<Shop> shops = shopRepo.findAllByZidAndOutletId(sessionManager.getBusinessId(), Integer.parseInt(outletid));

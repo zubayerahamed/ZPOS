@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -40,6 +41,11 @@ public class Xusers extends AbstractModel<Integer> {
 	@Column(name = "xusername")
 	private Integer xusername;
 
+	@NotBlank(message = "Display name required")
+	@Column(name = "xdisplayname", length = 50)
+	private String xdisplayname;
+
+	@NotBlank(message = "Password required")
 	@Column(name = "xpassword", length = 250)
 	private String xpassword;
 

@@ -17,6 +17,7 @@ import com.zubayer.entity.Terminal;
 import com.zubayer.entity.UOM;
 import com.zubayer.entity.Variation;
 import com.zubayer.entity.Xscreens;
+import com.zubayer.entity.Xusers;
 import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.enums.SubmitFor;
@@ -45,6 +46,11 @@ public class ModelValidator extends ConstraintValidator {
 	@Autowired private VariationRepo vRepo;
 	@Autowired private UOMRepo uomRepo;
 	@Autowired private ChargeRepo chargeRepo;
+
+	public void validateXusers(Xusers xusers, Errors errors, Validator validator) {
+		if(xusers == null) return;
+		super.validate(xusers, errors, validator);
+	}
 
 	public void validateZbusiness(Zbusiness zbusiness, Errors errors, Validator validator) {
 		if(zbusiness == null) return;

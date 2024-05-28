@@ -15,6 +15,106 @@
 </div>
 
 
+<div th:fragment="LAD17-table" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div th:remove="tag" th:include="search-fragments :: search-hidden-fields"></div>
+
+		<div class="table-responsive">
+			<table class="table searchdatatable">
+				<thead>
+					<tr>
+						<th>UserID</th>
+						<th>Display Name</th>
+						<th>Active?</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			kit.ui.init();
+
+			var fieldId = $('#fieldId').val();
+			var suffix = $('#suffix').val();
+			var mainscreen = $('#mainscreen').val();
+			var mainreloadurl = $('#mainreloadurl').val();
+			var mainreloadid = $('#mainreloadid').val();
+			var detailreloadurl = $('#detailreloadurl').val();
+			var detailreloadid = $('#detailreloadid').val();
+			var dependentParam = $('#dependentParam').val();
+			var resetParam = $('#resetParam').val();
+
+			var dt = $('.searchdatatable').DataTable({
+				"deferLoading": true,
+				"processing" : true,
+				"serverSide" : true,
+				"order" : [0, 'desc'],
+				"columnDefs": [
+					{ "name": "xusername",   "targets": 0 },
+					{ "name": "xdisplayname",  "targets": 1 },
+					{ "name": "zactive",  "targets": 2 },
+				],
+				"ajax" : getBasepath() + "/search/LAD17/" + suffix + '?dependentParam=' + (dependentParam == undefined ? '' : dependentParam),
+				"columns": [
+					{ 
+						"data": "xusername",
+						render: function(data, type, row, meta) {
+							return "<a style='text-decoration: underline; cursor: pointer;' class='dataindex' href='#' data-value='"+data+"' data-prompt='"+ data + " - " +  row['xname'] +"'>" + data + "</a>";
+						}
+					},
+					{ "data": "xdisplayname" },
+					{ 
+						"data": "zactive",
+						"class": 'text-center',
+						render: function(data, type) {
+							return data == true ? 'Y' : 'N';
+						}
+					}
+				],
+				"search": {
+					"search": $("#searchValue").val()
+				}
+			});
+
+			//make ajax to call server
+			dt.draw();
+
+			$('.searchdatatable').on('click', 'a.dataindex', function(e){
+				e.preventDefault();
+
+				if(mainscreen == 'true'){
+					$('#searchSuggestTableModal').modal('hide');
+
+					var value = $(this).data('value');
+
+					sectionReloadAjaxReq({
+						id : mainreloadid,
+						url : mainreloadurl + value
+					});
+
+					if(detailreloadid){
+						sectionReloadAjaxReq({
+							id : detailreloadid,
+							url : detailreloadurl + value
+						});
+					}
+				} else {
+					var prompt = $(this).data('prompt');
+					var value = $(this).data('value');
+
+					$('#searchSuggestTableModal').modal('hide');
+
+					$('input[name="'+ fieldId +'"]').val(value);
+					$('#' + fieldId).val(prompt);
+				}
+			})
+		})
+	</script>
+</div>
+
 <div th:fragment="LMD13-table" xmlns:th="http://www.thymeleaf.org">
 	<div class="card">
 		<div th:remove="tag" th:include="search-fragments :: search-hidden-fields"></div>

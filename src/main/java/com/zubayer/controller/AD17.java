@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Xscreens;
-import com.zubayer.entity.pk.AddOnsPK;
+import com.zubayer.entity.Xusers;
 import com.zubayer.entity.pk.XscreensPK;
+import com.zubayer.entity.pk.XusersPK;
 import com.zubayer.enums.SubmitFor;
 import com.zubayer.exceptions.ResourceNotFoundException;
 import com.zubayer.model.ReloadSection;
-import com.zubayer.repository.AddOnsRepo;
 import com.zubayer.repository.XusersRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +38,6 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/AD17")
 public class AD17 extends AbstractBaseController {
 
-	@Autowired private AddOnsRepo addonsRepo;
 	@Autowired private XusersRepo xusersRepo;
 
 	@Override
@@ -52,90 +50,90 @@ public class AD17 extends AbstractBaseController {
 	}
 
 	@GetMapping
-	public String index(@RequestParam(required = false) String xcode, Model model, HttpServletRequest request) throws ResourceNotFoundException {
+	public String index(@RequestParam(required = false) String xusername, Model model, HttpServletRequest request) throws ResourceNotFoundException {
 
 		if(isAjaxRequest(request)) {
-			if("RESET".equalsIgnoreCase(xcode)) {
-				model.addAttribute("addons", AddOns.getDefaultInstance());
+			if("RESET".equalsIgnoreCase(xusername)) {
+				model.addAttribute("xusers", Xusers.getDefaultInstance());
 				return "pages/AD17/AD17-fragments::main-form";
 			}
 
-			Optional<AddOns> addonsOp = addonsRepo.findById(new AddOnsPK(sessionManager.getBusinessId(), Integer.parseInt(xcode)));
-			if(!addonsOp.isPresent()) {
-				model.addAttribute("addons", AddOns.getDefaultInstance());
+			Optional<Xusers> xusersOp = xusersRepo.findById(new XusersPK(sessionManager.getBusinessId(), Integer.parseInt(xusername)));
+			if(!xusersOp.isPresent()) {
+				model.addAttribute("xusers", Xusers.getDefaultInstance());
 				return "pages/AD17/AD17-fragments::main-form";
 			}
 
-			model.addAttribute("addons", addonsOp.get());
+			model.addAttribute("xusers", xusersOp.get());
 			return "pages/AD17/AD17-fragments::main-form";
 		}
 
-		if(StringUtils.isNotBlank(xcode) && !"RESET".equalsIgnoreCase(xcode)) {
-			Optional<AddOns> addonsOp = addonsRepo.findById(new AddOnsPK(sessionManager.getBusinessId(), Integer.parseInt(xcode)));
-			if(!addonsOp.isPresent()) {
-				model.addAttribute("addons", AddOns.getDefaultInstance());
+		if(StringUtils.isNotBlank(xusername) && !"RESET".equalsIgnoreCase(xusername)) {
+			Optional<Xusers> xusersOp = xusersRepo.findById(new XusersPK(sessionManager.getBusinessId(), Integer.parseInt(xusername)));
+			if(!xusersOp.isPresent()) {
+				model.addAttribute("xusers", Xusers.getDefaultInstance());
 				return "pages/AD17/AD17";
 			}
 
-			model.addAttribute("addons", addonsOp.get());
+			model.addAttribute("xusers", xusersOp.get());
 			return "pages/AD17/AD17";
 		}
 
-		model.addAttribute("addons", AddOns.getDefaultInstance());
+		model.addAttribute("xusers", Xusers.getDefaultInstance());
 		return "pages/AD17/AD17";
 	}
 
 	@PostMapping("/store")
-	public @ResponseBody Map<String, Object> store(AddOns addons, BindingResult bindingResult){
+	public @ResponseBody Map<String, Object> store(Xusers xusers, BindingResult bindingResult){
 
 		// VALIDATE outlet
-		modelValidator.validateAddOns(addons, bindingResult, validator);
+		modelValidator.validateXusers(xusers, bindingResult, validator);
 		if(bindingResult.hasErrors()) return modelValidator.getValidationMessage(bindingResult);
 
 		// Create new
-		if(SubmitFor.INSERT.equals(addons.getSubmitFor())) {
-			addons.setXcode(xscreensRepo.Fn_getTrn(sessionManager.getBusinessId(), "AD17"));
-			addons.setZid(sessionManager.getBusinessId());
-			addons = addonsRepo.save(addons);
+		if(SubmitFor.INSERT.equals(xusers.getSubmitFor())) {
+			xusers.setXusername(xscreensRepo.Fn_getTrn(sessionManager.getBusinessId(), "AD17"));
+			xusers.setZid(sessionManager.getBusinessId());
+			xusers = xusersRepo.save(xusers);
 
 			List<ReloadSection> reloadSections = new ArrayList<>();
-			reloadSections.add(new ReloadSection("main-form-container", "/AD17?xcode=" + addons.getXcode()));
+			reloadSections.add(new ReloadSection("main-form-container", "/AD17?xusername=" + xusers.getXusername()));
 			responseHelper.setReloadSections(reloadSections);
 			responseHelper.setSuccessStatusAndMessage("Saved Successfully");
 			return responseHelper.getResponse();
 		}
 
 		// Update existing
-		Optional<AddOns> op = addonsRepo.findById(new AddOnsPK(sessionManager.getBusinessId(), addons.getXcode()));
+		Optional<Xusers> op = xusersRepo.findById(new XusersPK(sessionManager.getBusinessId(), xusers.getXusername()));
 		if(!op.isPresent()) {
 			responseHelper.setErrorStatusAndMessage("Data not found in this system to do update");
 			return responseHelper.getResponse();
 		}
 
-		AddOns existObj = op.get();
-		BeanUtils.copyProperties(addons, existObj, "zid", "createdBy", "createdOn", "xcode");
-		existObj = addonsRepo.save(existObj);
+		Xusers existObj = op.get();
+		BeanUtils.copyProperties(xusers, existObj, "zid", "createdBy", "createdOn", "xusername");
+		existObj = xusersRepo.save(existObj);
 
 		List<ReloadSection> reloadSections = new ArrayList<>();
-		reloadSections.add(new ReloadSection("main-form-container", "/AD17?xcode=" + addons.getXcode()));
+		reloadSections.add(new ReloadSection("main-form-container", "/AD17?xusername=" + xusers.getXusername()));
 		responseHelper.setReloadSections(reloadSections);
 		responseHelper.setSuccessStatusAndMessage("Updated Successfully");
 		return responseHelper.getResponse();
 	}
 
 	@DeleteMapping
-	public @ResponseBody Map<String, Object> delete(@RequestParam Integer xcode){
-		Optional<AddOns> op = addonsRepo.findById(new AddOnsPK(sessionManager.getBusinessId(), xcode));
+	public @ResponseBody Map<String, Object> delete(@RequestParam Integer xusername){
+		Optional<Xusers> op = xusersRepo.findById(new XusersPK(sessionManager.getBusinessId(), xusername));
 		if(!op.isPresent()) {
 			responseHelper.setErrorStatusAndMessage("Data not found in this system to do delete");
 			return responseHelper.getResponse();
 		}
 
-		AddOns obj = op.get();
-		addonsRepo.delete(obj);
+		Xusers obj = op.get();
+		xusersRepo.delete(obj);
 
 		List<ReloadSection> reloadSections = new ArrayList<>();
-		reloadSections.add(new ReloadSection("main-form-container", "/AD17?xcode=RESET"));
+		reloadSections.add(new ReloadSection("main-form-container", "/AD17?xusername=RESET"));
 		responseHelper.setReloadSections(reloadSections);
 		responseHelper.setSuccessStatusAndMessage("Deleted Successfully");
 		return responseHelper.getResponse();
