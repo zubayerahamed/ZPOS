@@ -148,7 +148,7 @@ public class AD13 extends AbstractBaseController {
 		}
 
 		Terminal existObj = op.get();
-		BeanUtils.copyProperties(terminal, existObj, "zid", "createdBy", "createdOn", "outletId", "shopId");
+		BeanUtils.copyProperties(terminal, existObj, "zid", "createdBy", "createdOn", "outletId", "shopId", "xdevice");
 		existObj = terminalRepo.save(existObj);
 
 		List<ReloadSection> reloadSections = new ArrayList<>();

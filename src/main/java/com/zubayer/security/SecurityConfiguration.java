@@ -37,6 +37,7 @@ public class SecurityConfiguration {
 		"/register/**",
 		"/business/**",
 		"/clearlogincache",
+		"/api/v1/**",
 	};
 
 	@Bean

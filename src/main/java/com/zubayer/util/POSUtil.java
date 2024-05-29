@@ -53,6 +53,24 @@ public class POSUtil {
 		return terminalOp.isPresent();
 	}
 
+	public Integer extractKey(String key, String type) {
+		if(StringUtils.isBlank(key)) return null;
+		if(key.length() != 27) return null;
+
+		String data[] = key.split("-");
+
+		Integer zid = Integer.valueOf(removeLeadingZero(data[0]));
+		Integer outlet = Integer.valueOf(removeLeadingZero(data[1]));
+		Integer shop = Integer.valueOf(removeLeadingZero(data[2]));
+		Integer terminal = Integer.valueOf(removeLeadingZero(data[3]));
+
+		if("business".equalsIgnoreCase(type)) return zid;
+		if("outlet".equalsIgnoreCase(type)) return outlet;
+		if("shop".equalsIgnoreCase(type)) return shop;
+		if("terminal".equalsIgnoreCase(type)) return terminal;
+		return null;
+	}
+
 	private String removeLeadingZero(String txt) {
 		return txt.replaceFirst("^0+", "");
 	}

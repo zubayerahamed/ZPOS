@@ -50,6 +50,9 @@ public class Terminal extends AbstractModel<Integer> {
 	@Column(name = "xname", length = 100)
 	private String xname;
 
+	@Column(name = "xdevice", length = 255)
+	private String xdevice;
+
 	@Column(name = "zactive", length = 1)
 	private Boolean zactive = Boolean.TRUE;
 

@@ -37,6 +37,12 @@
 									<input type="text" class="form-control" th:value="${poskey}" disabled>
 								</div>
 							</div>
+							<div class="col-md-12" th:if="${terminal.xdevice}">
+								<div class="mb-3 form-group">
+									<label class="form-label">Registered Device</label>
+									<input type="text" class="form-control" th:value="${terminal.xdevice}" disabled>
+								</div>
+							</div>
 							<div class="col-md-3">
 								<div class="mb-3 form-group">
 									<label class="form-label d-block" for="zactive">Is Active?</label>

@@ -1,5 +1,7 @@
 package com.zubayer.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +16,5 @@ import com.zubayer.entity.pk.XusersPK;
 @Repository
 public interface XusersRepo extends JpaRepository<Xusers, XusersPK> {
 
+	List<Xusers> findAllByZid(Integer zid);
 }
