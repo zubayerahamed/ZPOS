@@ -60,6 +60,9 @@ public class Xscreens extends AbstractModel<Integer> {
 	@Column(name = "xnum")
 	private Integer xnum;
 
+	@Column(name = "xinc")
+	private Integer xinc;
+
 	@NotBlank
 	@Column(name = "xtype", length = 10)
 	private String xtype;
@@ -83,7 +86,9 @@ public class Xscreens extends AbstractModel<Integer> {
 	public static Xscreens getDefaultInstance() {
 		Xscreens obj = new Xscreens();
 		obj.setSubmitFor(SubmitFor.INSERT);
+		obj.setXnum(100);
 		obj.setXsequence(0);
+		obj.setXinc(1);
 		return obj;
 	}
 }

@@ -31,7 +31,13 @@
 					<div class="col-md-3">
 						<div class="mb-3 form-group">
 							<label class="form-label">Transaction Number</label>
-							<input type="number" class="form-control" th:field="*{xnum}" min="0" step="1">
+							<input type="number" class="form-control numeric-only" th:field="*{xnum}" min="0" step="1" required>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label">Increment</label>
+							<input type="number" class="form-control numeric-only" th:field="*{xinc}" min="1" step="1" required>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -62,7 +68,7 @@
 					<div class="col-md-3">
 						<div class="mb-3 form-group">
 							<label class="form-label">View Sequence</label>
-							<input type="number" class="form-control" th:field="*{xsequence}" min="0" step="1" required="required">
+							<input type="number" class="form-control numeric-only" th:field="*{xsequence}" min="0" step="1" required="required">
 						</div>
 					</div>
 				</div>

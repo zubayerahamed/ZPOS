@@ -53,6 +53,9 @@ public class Terminal extends AbstractModel<Integer> {
 	@Column(name = "xdevice", length = 255)
 	private String xdevice;
 
+	@Column(name = "xshift")
+	private Integer xshift;
+
 	@Column(name = "zactive", length = 1)
 	private Boolean zactive = Boolean.TRUE;
 
@@ -68,6 +71,7 @@ public class Terminal extends AbstractModel<Integer> {
 	public static Terminal getDefaultInstance() {
 		Terminal obj = new Terminal();
 		obj.setSubmitFor(SubmitFor.INSERT);
+		obj.setXshift(0);
 		return obj;
 	}
 }

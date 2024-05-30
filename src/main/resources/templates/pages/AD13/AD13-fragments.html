@@ -31,6 +31,12 @@
 									<div th:remove="tag" th:include="pages/AD13/AD13-fragments :: shopid-field"></div>
 								</div>
 							</div>
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Max Allowed Shift</label>
+									<input type="number" class="form-control numeric-only" min="0" step="1" th:field="*{xshift}" required>
+								</div>
+							</div>
 							<div class="col-md-12" th:if="${poskey}">
 								<div class="mb-3 form-group">
 									<label class="form-label">Offline POS Key</label>
@@ -74,6 +80,7 @@
 								<thead>
 									<tr>
 										<th>Terminal</th>
+										<th class="text-center">Max Shift</th>
 										<th class="text-center">Active?</th>
 									</tr>
 								</thead>
@@ -82,6 +89,7 @@
 										<td>
 											<a class="detail-dataindex" th:attr="data-reloadid='main-form-container', data-reloadurl='/AD13?id=' + ${x.id} + '&outletid=' + ${x.outletId} + '&shopid=' + ${x.shopId}" th:href="@{/AD13?id=} + ${x.id} + '&outletid=' + ${x.outletId} + '&shopid=' + ${x.shopId}" th:text="${x.xname}"></a>
 										</td>
+										<td class="text-center" th:text="${x.xshift}"></td>
 										<td class="text-center" th:text="${x.zactive ? 'Y' : 'N'}"></td>
 									</tr>
 								</tbody>
