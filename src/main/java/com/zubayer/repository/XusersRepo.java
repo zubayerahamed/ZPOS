@@ -17,4 +17,6 @@ import com.zubayer.entity.pk.XusersPK;
 public interface XusersRepo extends JpaRepository<Xusers, XusersPK> {
 
 	List<Xusers> findAllByZid(Integer zid);
+
+	List<Xusers> findAllByZidAndXoutletAndXshop(Integer zid, Integer xoutlet, Integer xshop); 
 }

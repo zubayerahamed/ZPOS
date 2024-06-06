@@ -19,6 +19,8 @@ import com.zubayer.enums.ChargeType;
 @Repository
 public interface ChargeRepo extends JpaRepository<Charge, ChargePK> {
 
+	List<Charge> findAllByZid(Integer zid);
+
 	List<Charge> findAllByXtypeAndZid(ChargeType xtype, Integer zid);
 
 	Optional<Charge> findByZidAndXtypeAndXrate(Integer zid, ChargeType xtype, BigDecimal xrate);

@@ -42,6 +42,20 @@
 					</div>
 					<div class="col-md-3">
 						<div class="mb-3 form-group">
+							<label class="form-label">Outlet</label>
+							<select class="form-control select outlet-option" th:field="*{xoutlet}" required>
+								<option value="">-- Select Outlet --</option>
+								<option th:each="outlet : ${outlets}" th:value="${outlet.id}" th:text="${outlet.xname}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="shopid-field-container">
+							<div th:remove="tag" th:include="pages/AD17/AD17-fragments :: shopid-field"></div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
 							<label class="form-label">Role</label>
 							<select class="form-control select" th:field="*{xrole}" required>
 								<option value="">-- Select --</option>
@@ -97,6 +111,35 @@
 				deleteRequest($(this).data('url'));
 			});
 
+			$('select.outlet-option').on('change', function(){
+				var selectedOutletId = $(this).val();
+				if(selectedOutletId == null || selectedOutletId == '') selectedOutletId = 0;
+				var xusername = $('#xusername').val();
+				if(xusername == '' || xusername == undefined) xusername = 0;
+
+				sectionReloadAjaxReq({
+					id : 'shopid-field-container',
+					url : '/AD17/shopid-field?xusername='+ xusername +'&outletid=' + selectedOutletId
+				});
+			});
+
 		})
+	</script>
+</div>
+
+
+<div th:fragment="shopid-field" xmlns:th="http://www.thymeleaf.org">
+	<div class="mb-3 form-group">
+		<label class="form-label">Shop</label>
+		<select class="form-control select" id="xshop" name="xshop" required>
+			<option value="">-- Select Shop --</option>
+			<option th:each="shop : ${shops}" th:value="${shop.id}" th:text="${shop.xname}" th:selected="${xusers.xshop eq shop.id}"></option>
+		</select>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+		});
 	</script>
 </div>

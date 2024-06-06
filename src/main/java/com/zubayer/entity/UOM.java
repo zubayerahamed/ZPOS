@@ -40,6 +40,9 @@ public class UOM extends AbstractModel<Integer> {
 	@Column(name = "xname", length = 100)
 	private String xname;
 
+	@Column(name = "zactive", length = 1)
+	private Boolean zactive = Boolean.TRUE;
+
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 

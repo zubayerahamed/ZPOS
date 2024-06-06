@@ -1,5 +1,6 @@
 package com.zubayer.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ import com.zubayer.entity.pk.AddOnsPK;
 @Repository
 public interface AddOnsRepo extends JpaRepository<AddOns, AddOnsPK>{
 
+	List<AddOns> findAllByZid(Integer zid);
+	
 	Optional<AddOns> findByZidAndXname(Integer zid, String xname);
 
 }

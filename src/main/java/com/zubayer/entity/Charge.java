@@ -49,6 +49,9 @@ public class Charge extends AbstractModel<Integer> {
 	@Column(name = "xrate")
 	private BigDecimal xrate;
 
+	@Column(name = "zactive", length = 1)
+	private Boolean zactive = Boolean.TRUE;
+
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 

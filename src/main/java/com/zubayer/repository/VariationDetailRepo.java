@@ -17,6 +17,8 @@ import com.zubayer.entity.pk.VariationDetailPK;
 @Repository
 public interface VariationDetailRepo extends JpaRepository<VariationDetail, VariationDetailPK> {
 
+	List<VariationDetail> findAllByZid(Integer zid);
+
 	List<VariationDetail> findAllByZidAndXcode(Integer zid, Integer xcode);
 
 	@Query(value = "select isnull(max(COALESCE(xrow,0)) + 1, 1) from variation_detail where zid=?1 and xcode=?2", nativeQuery = true)

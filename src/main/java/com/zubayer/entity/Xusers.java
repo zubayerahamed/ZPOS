@@ -56,6 +56,12 @@ public class Xusers extends AbstractModel<Integer> {
 	@Column(name = "xrole", length = 20)
 	private POSRole xrole;
 
+	@Column(name = "xoutlet")
+	private Integer xoutlet;
+
+	@Column(name = "xshop")
+	private Integer xshop;
+
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 

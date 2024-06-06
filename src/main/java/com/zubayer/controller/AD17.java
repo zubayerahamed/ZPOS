@@ -1,9 +1,11 @@
 package com.zubayer.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zubayer.entity.Outlet;
+import com.zubayer.entity.Shop;
 import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Xusers;
 import com.zubayer.entity.pk.XscreensPK;
@@ -25,6 +29,8 @@ import com.zubayer.entity.pk.XusersPK;
 import com.zubayer.enums.SubmitFor;
 import com.zubayer.exceptions.ResourceNotFoundException;
 import com.zubayer.model.ReloadSection;
+import com.zubayer.repository.OutletRepo;
+import com.zubayer.repository.ShopRepo;
 import com.zubayer.repository.XusersRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +45,8 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AD17 extends AbstractBaseController {
 
 	@Autowired private XusersRepo xusersRepo;
+	@Autowired private OutletRepo outletRepo;
+	@Autowired private ShopRepo shopRepo;
 
 	@Override
 	protected String pageTitle() {
@@ -51,6 +59,10 @@ public class AD17 extends AbstractBaseController {
 
 	@GetMapping
 	public String index(@RequestParam(required = false) String xusername, Model model, HttpServletRequest request) throws ResourceNotFoundException {
+		List<Outlet> outlets = outletRepo.findAllByZid(sessionManager.getBusinessId());
+		outlets = outlets.stream().filter(o -> o.getZactive().equals(Boolean.TRUE)).collect(Collectors.toList());
+		outlets.sort(Comparator.comparing(Outlet::getXname));
+		model.addAttribute("outlets", outlets);
 
 		if(isAjaxRequest(request)) {
 			if("RESET".equalsIgnoreCase(xusername)) {
@@ -64,6 +76,11 @@ public class AD17 extends AbstractBaseController {
 				return "pages/AD17/AD17-fragments::main-form";
 			}
 
+			List<Shop> shops = shopRepo.findAllByZidAndOutletId(sessionManager.getBusinessId(), xusersOp.get().getXoutlet());
+			shops = shops.stream().filter(f -> f.getZactive().equals(Boolean.TRUE)).collect(Collectors.toList());
+			shops.sort(Comparator.comparing(Shop::getXname));
+			model.addAttribute("shops", shops);
+
 			model.addAttribute("xusers", xusersOp.get());
 			return "pages/AD17/AD17-fragments::main-form";
 		}
@@ -74,6 +91,11 @@ public class AD17 extends AbstractBaseController {
 				model.addAttribute("xusers", Xusers.getDefaultInstance());
 				return "pages/AD17/AD17";
 			}
+
+			List<Shop> shops = shopRepo.findAllByZidAndOutletId(sessionManager.getBusinessId(), xusersOp.get().getXoutlet());
+			shops = shops.stream().filter(f -> f.getZactive().equals(Boolean.TRUE)).collect(Collectors.toList());
+			shops.sort(Comparator.comparing(Shop::getXname));
+			model.addAttribute("shops", shops);
 
 			model.addAttribute("xusers", xusersOp.get());
 			return "pages/AD17/AD17";
@@ -137,5 +159,21 @@ public class AD17 extends AbstractBaseController {
 		responseHelper.setReloadSections(reloadSections);
 		responseHelper.setSuccessStatusAndMessage("Deleted Successfully");
 		return responseHelper.getResponse();
+	}
+
+	@GetMapping("/shopid-field")
+	public String loadXsaddFieldFragment(@RequestParam Integer xusername, @RequestParam Integer outletid,  Model model){
+		List<Shop> shops = shopRepo.findAllByZidAndOutletId(sessionManager.getBusinessId(), outletid);
+		shops = shops.stream().filter(f -> f.getZactive().equals(Boolean.TRUE)).collect(Collectors.toList());
+		shops.sort(Comparator.comparing(Shop::getXname));
+		model.addAttribute("shops", shops);
+
+		Xusers xusers = Xusers.getDefaultInstance();
+		if(xusername != 0) {
+			xusers.setXusername(xusername);
+		}
+		model.addAttribute("xusers", xusers);
+
+		return "pages/AD17/AD17-fragments::shopid-field";
 	}
 }

@@ -1,5 +1,6 @@
 package com.zubayer.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,7 @@ import com.zubayer.entity.pk.VariationPK;
 @Repository
 public interface VariationRepo extends JpaRepository<Variation, VariationPK> {
 
+	List<Variation> findAllByZid(Integer zid);
 	Optional<Variation> findByZidAndXname(Integer zid, String xname);
 
 }
