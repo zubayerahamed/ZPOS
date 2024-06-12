@@ -55,17 +55,22 @@ public class XusersServiceImpl extends AbstractService implements XusersService 
 		obj.setXdisplayname((String) row.get("xdisplayname"));
 		obj.setXpassword((String) row.get("xpassword"));
 		obj.setXrole(POSRole.valueOf((String) row.get("xrole")));
-
+		obj.setXoutlet((Integer) row.get("xoutlet"));
+		obj.setXshop((Integer) row.get("xshop"));
 		obj.setZactive((Boolean) row.get("zactive"));
+		obj.setOutletName((String) row.get("outletname"));
+		obj.setShopName((String) row.get("shopname"));
 		return obj;
 	}
 
 	private StringBuilder selectClause() {
-		return new StringBuilder("SELECT im.* ");
+		return new StringBuilder("SELECT im.*, outlet.xname as outletname, shop.xname as shopname ");
 	}
 
 	private StringBuilder fromClause(String tableName) {
-		return new StringBuilder(" FROM " + tableName + " ");
+		return new StringBuilder(" FROM " + tableName + " ")
+				.append(" LEFT JOIN outlet ON outlet.id = im.xoutlet AND outlet.zid = im.zid ")
+				.append(" LEFT JOIN shop ON shop.id = im.xshop AND shop.zid = im.zid ");
 	}
 
 	private StringBuilder whereClause(String searchText, int suffix, String dependentParam) {

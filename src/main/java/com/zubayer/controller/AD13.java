@@ -90,7 +90,7 @@ public class AD13 extends AbstractBaseController {
 
 			Optional<Terminal> terminalOp = terminalRepo.findById(new TerminalPK(sessionManager.getBusinessId(), Integer.valueOf(outletid), Integer.valueOf(shopid), Integer.parseInt(id)));
 			if(!terminalOp.isPresent()) {
-				model.addAttribute("terminal", Shop.getDefaultInstance());
+				model.addAttribute("terminal", Terminal.getDefaultInstance());
 			}
 
 			// Offline POS key

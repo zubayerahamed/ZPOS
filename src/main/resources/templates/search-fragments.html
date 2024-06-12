@@ -25,6 +25,9 @@
 					<tr>
 						<th>UserID</th>
 						<th>Display Name</th>
+						<th>Role</th>
+						<th>Outlet</th>
+						<th>Shop</th>
 						<th>Active?</th>
 					</tr>
 				</thead>
@@ -55,6 +58,9 @@
 				"columnDefs": [
 					{ "name": "xusername",   "targets": 0 },
 					{ "name": "xdisplayname",  "targets": 1 },
+					{ "name": "xrole",  "targets": 1 },
+					{ "name": "xoutlet",  "targets": 1 },
+					{ "name": "xshop",  "targets": 1 },
 					{ "name": "zactive",  "targets": 2 },
 				],
 				"ajax" : getBasepath() + "/search/LAD17/" + suffix + '?dependentParam=' + (dependentParam == undefined ? '' : dependentParam),
@@ -66,6 +72,9 @@
 						}
 					},
 					{ "data": "xdisplayname" },
+					{ "data": "xrole" },
+					{ "data": "outletName" },
+					{ "data": "shopName" },
 					{ 
 						"data": "zactive",
 						"class": 'text-center',

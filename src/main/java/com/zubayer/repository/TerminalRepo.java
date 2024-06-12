@@ -20,4 +20,6 @@ public interface TerminalRepo extends JpaRepository<Terminal, TerminalPK> {
 	List<Terminal> findAllByZid(Integer zid);
 
 	Optional<Terminal> findByZidAndXdevice(Integer zid, String xdevice);
+
+	List<Terminal> findAllByZidAndOutletIdAndShopId(Integer zid, Integer outletId, Integer shopId);
 }

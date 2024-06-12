@@ -16,7 +16,9 @@ import com.zubayer.entity.Shop;
 import com.zubayer.entity.Terminal;
 import com.zubayer.entity.UOM;
 import com.zubayer.entity.Variation;
+import com.zubayer.entity.Xfloor;
 import com.zubayer.entity.Xscreens;
+import com.zubayer.entity.Xtable;
 import com.zubayer.entity.Xusers;
 import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.pk.XscreensPK;
@@ -185,5 +187,15 @@ public class ModelValidator extends ConstraintValidator {
 		if(SubmitFor.INSERT.equals(xscreens.getSubmitFor()) && op.isPresent()) {
 			errors.rejectValue("xscreen", "Screen already exist in the system");
 		}
+	}
+
+	public void validateXfloor(Xfloor xfloor, Errors errors, Validator validator) {
+		if(xfloor == null) return;
+		super.validate(xfloor, errors, validator);
+	}
+
+	public void validateXtable(Xtable xtable, Errors errors, Validator validator) {
+		if(xtable == null) return;
+		super.validate(xtable, errors, validator);
 	}
 }

@@ -18,7 +18,7 @@ public class XfloorPK implements Serializable {
 	private static final long serialVersionUID = 5649912067452124819L;
 
 	private Integer zid;
-	private Integer id;
 	private Integer xoutlet;
 	private Integer xshop;
+	private Integer id;
 }

@@ -63,6 +63,12 @@ public class Xusers extends AbstractModel<Integer> {
 	private Integer xshop;
 
 	@Transient
+	private String outletName;
+
+	@Transient
+	private String shopName;
+
+	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 
 	public static Xusers getDefaultInstance() {

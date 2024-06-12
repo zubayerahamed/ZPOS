@@ -1,0 +1,150 @@
+<div th:fragment="main-form" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div class="card-body">
+			<div class="row">
+
+				<div class="col-md-4">
+					<form id="mainform" class="form-validate-jquery" th:action="@{/AD18/store}" th:object="${xfloor}" method="POST">
+						<input type="hidden" th:field="*{submitFor}"/>
+						<input type="hidden" th:if="${xfloor.id ne null}" th:field="*{id}">
+						<input type="hidden" th:if="${xfloor.id ne null}" th:field="*{xoutlet}">
+						<input type="hidden" th:if="${xfloor.id ne null}" th:field="*{xshop}">
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Floor Name</label>
+									<input type="text" class="form-control" th:field="*{xname}" required="required">
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Outlet</label>
+									<select class="form-control select outlet-option" th:field="*{xoutlet}" th:disabled="${xfloor.id ne null}" required>
+										<option value="">-- Select Outlet --</option>
+										<option th:each="outlet : ${outlets}" th:value="${outlet.id}" th:text="${outlet.xname}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="xshop-field-container">
+									<div th:remove="tag" th:include="pages/AD18/AD18-fragments :: xshop-field"></div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label d-block" for="zactive">Is Active?</label>
+									<input type="checkbox" id="zactive" th:field="*{zactive}">
+								</div>
+							</div>
+						</div>
+
+						<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<button type="reset" th:attr="data-reloadurl='/AD18?id=RESET&xoutlet=RESET&xshop=RESET', data-reloadid='main-form-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
+							</div>
+							<div>
+								<button th:if="${xfloor.id ne null}" th:attr="data-url=@{/AD18?id=} + ${xfloor.id} + '&xoutlet=' + ${xfloor.xoutlet} + '&xshop=' + ${xfloor.xshop}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
+								<button th:if="${xfloor.id ne null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
+								<button th:if="${xfloor.id eq null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Add</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-1 mt-5"></div>
+				<div class="col-md-7">
+					<h3>List of Floors</h3>
+					<div class="table-responsive" th:each="entry : ${floorsMap}">
+						<h5 th:text="'Outlet : ' + ${entry.key}" class="m-0 mt-4 p-0"></h5>
+						<div th:each="entry2 : ${entry.value}">
+							<h6 th:text="'Shop : ' + ${entry2.key}" class="m-0 p-0"></h6>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Floor</th>
+										<th class="text-center">Active?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="x : ${entry2.value}">
+										<td>
+											<a class="detail-dataindex" th:attr="data-reloadid='main-form-container', data-reloadurl='/AD18?id=' + ${x.id} + '&xoutlet=' + ${x.xoutlet} + '&xshop=' + ${x.xshop}" th:href="@{/AD18?id=} + ${x.id} + '&xoutlet=' + ${x.xoutlet} + '&xshop=' + ${x.xshop}" th:text="${x.xname}"></a>
+										</td>
+										<td class="text-center" th:text="${x.zactive ? 'Y' : 'N'}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+
+			$('.btn-reset').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('.btn-submit').off('click').on('click', function(e){
+				e.preventDefault();
+				submitMainForm();
+			});
+
+			$('.btn-delete').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+
+			$('a.detail-dataindex').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('select.outlet-option').on('change', function(){
+				var selectedOutletId = $(this).val();
+				if(selectedOutletId == null || selectedOutletId == '') selectedOutletId = 0;
+				var xfloorId = $('#id').val();
+				if(xfloorId == '' || xfloorId == undefined) xfloorId = 0;
+
+				sectionReloadAjaxReq({
+					id : 'xshop-field-container',
+					url : '/AD18/xshop-field?xfloorid='+ xfloorId +'&xoutlet=' + selectedOutletId
+				});
+			});
+		})
+	</script>
+</div>
+
+
+
+<div th:fragment="xshop-field" xmlns:th="http://www.thymeleaf.org">
+	<div class="mb-3 form-group">
+		<label class="form-label">Shop</label>
+		<select class="form-control select" id="xshop" name="xshop" th:disabled="${xfloor.id ne null}" required>
+			<option value="">-- Select Shop --</option>
+			<option th:each="shop : ${shops}" th:value="${shop.id}" th:text="${shop.xname}" th:selected="${xfloor.xshop eq shop.id}"></option>
+		</select>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+		});
+	</script>
+</div>
