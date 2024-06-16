@@ -28,6 +28,7 @@ import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.enums.SubmitFor;
 import com.zubayer.exceptions.ResourceNotFoundException;
 import com.zubayer.model.ReloadSection;
+import com.zubayer.repository.CurrencyRepo;
 import com.zubayer.repository.OutletRepo;
 import com.zubayer.repository.ShopRepo;
 
@@ -44,6 +45,7 @@ public class AD12 extends AbstractBaseController {
 
 	@Autowired private ShopRepo shopRepo;
 	@Autowired private OutletRepo outletRepo;
+	@Autowired private CurrencyRepo currencyRepo;
 
 	@Override
 	protected String pageTitle() {
@@ -56,6 +58,8 @@ public class AD12 extends AbstractBaseController {
 
 	@GetMapping
 	public String index(@RequestParam(required = false) String id, @RequestParam(required = false) String outletid, Model model, HttpServletRequest request) throws ResourceNotFoundException {
+		model.addAttribute("currencies", currencyRepo.findAllByZid(sessionManager.getBusinessId()));
+
 		List<Shop> shops = shopRepo.findAllByZid(sessionManager.getBusinessId());
 		shops.stream().forEach(f -> {
 			Optional<Outlet> outletOp = outletRepo.findById(new OutletPK(sessionManager.getBusinessId(), f.getOutletId()));

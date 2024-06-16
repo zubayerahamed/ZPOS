@@ -33,9 +33,9 @@
 							</div>
 							<div class="col-md-12">
 								<div class="mb-3 form-group">
-									<label class="form-label">Currency</label>
+									<label class="form-label">Default Currency</label>
 									<select class="form-control select" th:field="*{currency}">
-										<option value="BDT">BDT</option>
+										<option th:each="x : ${currencies}" th:value="${x.xcode}" th:text="${x.xcode + ' - ' + x.xsign}">BDT</option>
 									</select>
 								</div>
 							</div>

@@ -23,7 +23,9 @@
 										data-fieldid='xcode',
 										data-mainscreen=true,
 										data-mainreloadurl='/MD16?xcode=',
-										data-mainreloadid='main-form-container'"
+										data-mainreloadid='main-form-container',
+										data-detailreloadurl='/MD16/detail-table?xvariation=RESET&xitem=',
+										data-detailreloadid='detail-table-container'"
 										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
 							</div>
 						</div>
@@ -134,7 +136,7 @@
 
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
-						<button type="reset" th:attr="data-reloadurl='/MD16?xcode=RESET', data-reloadid='main-form-container', data-detailreloadurl='/MD16/detail-table?xcode=RESET&xrow=RESET', data-detailreloadid='detail-table-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
+						<button type="reset" th:attr="data-reloadurl='/MD16?xcode=RESET', data-reloadid='main-form-container', data-detailreloadurl='/MD16/detail-table?xitem=RESET&xvariation=RESET', data-detailreloadid='detail-table-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
 					</div>
 					<div>
 						<button th:if="${item.xcode ne null}" th:attr="data-url=@{/MD16?xcode=} + ${item.xcode}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
@@ -158,6 +160,11 @@
 					url : $(this).data('reloadurl')
 				});
 
+				sectionReloadAjaxReq({
+					id : $(this).data('detailreloadid'),
+					url : $(this).data('detailreloadurl')
+				});
+
 			});
 
 			$('.btn-submit').off('click').on('click', function(e){
@@ -177,4 +184,259 @@
 	</script>
 </div>
 
+<div th:fragment="detail-table" xmlns:th="http://www.thymeleaf.org">
+	<div class="card" th:if="${itemVariation}">
+		<div class="card-header d-sm-flex align-items-sm-center py-sm-0">
+			<h6 class="py-sm-3 mb-sm-auto">Variation of Item - <span class="text-success" th:text="${item.xname}"></span> </h6>
+		</div>
 
+		<div class="card-body">
+			<form id="detailform" class="form-validate-jquery" th:action="@{/MD16/detail/store}" th:object="${itemVariation}" method="POST" th:with="df=${'yyyy-MM-dd'}">
+				<input type="hidden" th:field="*{submitFor}"/>
+				<input type="hidden" th:field="*{xitem}">
+				<input type="hidden" th:field="*{xvariation}" th:if="${itemVariation.xvariation ne null}">
+
+				<div class="row">
+					<div class="col-md-3" th:if="${itemVariation.xvariation eq null}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Variation</label>
+							<div class="input-group">
+								<input 	type="text" 
+										class="form-control searchsuggest2"
+										id="xvariation"
+										th:value="${itemVariation.xvariation != null ? itemVariation.variationName : ''}">
+								<input 	type="hidden" class="search-val" name="xvariation" th:value="*{xvariation}" required="required"/>
+								<span 	class="input-group-text btn-search" 
+										th:attr="
+										data-reloadurl='/search/table/LMD15/0?hint=', 
+										data-reloadid='search-suggest-results-container', 
+										data-fieldid='xvariation',
+										data-mainscreen=false" 
+										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
+								<span 	class="input-group-text btn-search-clear" 
+										style="cursor: pointer;"><i class="ph-arrow-counter-clockwise"></i></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3" th:if="${itemVariation.xvariation ne null}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Variation</label>
+							<input type="text" class="form-control" th:value="${itemVariation.variationName}" disabled/>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label d-block" for="xrequired">Is Selection Required?</label>
+							<input type="checkbox" id="xrequired" th:field="*{xrequired}">
+						</div>
+					</div>
+				</div>
+
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<button type="reset" th:attr="data-reloadurl='/MD16/detail-table?xitem='+ ${itemVariation.xitem} +'&xvariation=RESET', data-reloadid='detail-table-container'" class="btn btn-light btn-sm btn-detail-reset">Clear</button>
+					</div>
+					<div>
+						<button th:if="${itemVariation.xvariation ne null}" th:attr="data-url=@{/MD16/detail-table?xitem=} + ${itemVariation.xitem} + '&xvariation=' + ${itemVariation.xvariation}" type="button" class="btn btn-danger btn-sm btn-detail-delete"><i class="ph-trash me-2"></i> Delete</button>
+						<button th:if="${itemVariation.xvariation ne null}" type="submit" class="btn btn-primary btn-sm btn-detail-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
+						<button th:if="${itemVariation.xvariation eq null}" type="submit" class="btn btn-primary btn-sm btn-detail-submit"><i class="ph-plus me-2"></i> Add New</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="table-responsive" th:if="${not #lists.isEmpty(itemVariations)}">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Variation Name</th>
+						<th>Variation Options</th>
+						<th class="text-end">Selection Required?</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="x : ${itemVariations}">
+						<td>
+							<a class="detail-dataindex" th:attr="data-reloadid='detail-table-container', data-reloadurl='/MD16/detail-table?xitem=' + ${x.xitem} + '&xvariation=' + ${x.xvariation}" th:href="@{/MD16/detail-table?xitem=} + ${x.xitem} + '&xvariation=' + ${x.xvariation}" th:text="${x.variationName}"></a>
+						</td>
+						<td>
+							<table class="table">
+								<tr th:each="o : ${x.options}">
+									<td th:text="${'Name : ' + o.xname}"></td>
+									<td class="text-end" th:text="${'Price : ' + o.xprice}"></td>
+								</tr>
+							</table>
+						</td>
+						<td class="text-end" th:text="${x.xrequired ? 'Y' : 'N'}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+
+			$('.btn-detail-reset').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('.btn-detail-submit').off('click').on('click', function(e){
+				e.preventDefault();
+				submitMainForm(null, $('form#detailform'));
+			});
+
+			$('.btn-detail-delete').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+	
+			$('a.detail-dataindex').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+		})
+	</script>
+</div>
+
+
+<div th:fragment="addons-table" xmlns:th="http://www.thymeleaf.org">
+	<div class="card" th:if="${itemVariation}">
+		<div class="card-header d-sm-flex align-items-sm-center py-sm-0">
+			<h6 class="py-sm-3 mb-sm-auto">Variation of Item - <span class="text-success" th:text="${item.xname}"></span> </h6>
+		</div>
+
+		<div class="card-body">
+			<form id="detailform" class="form-validate-jquery" th:action="@{/MD16/detail/store}" th:object="${itemVariation}" method="POST" th:with="df=${'yyyy-MM-dd'}">
+				<input type="hidden" th:field="*{submitFor}"/>
+				<input type="hidden" th:field="*{xitem}">
+				<input type="hidden" th:field="*{xvariation}" th:if="${itemVariation.xvariation ne null}">
+
+				<div class="row">
+					<div class="col-md-3" th:if="${itemVariation.xvariation eq null}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Variation</label>
+							<div class="input-group">
+								<input 	type="text" 
+										class="form-control searchsuggest2"
+										id="xvariation"
+										th:value="${itemVariation.xvariation != null ? itemVariation.variationName : ''}">
+								<input 	type="hidden" class="search-val" name="xvariation" th:value="*{xvariation}" required="required"/>
+								<span 	class="input-group-text btn-search" 
+										th:attr="
+										data-reloadurl='/search/table/LMD15/0?hint=', 
+										data-reloadid='search-suggest-results-container', 
+										data-fieldid='xvariation',
+										data-mainscreen=false" 
+										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
+								<span 	class="input-group-text btn-search-clear" 
+										style="cursor: pointer;"><i class="ph-arrow-counter-clockwise"></i></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3" th:if="${itemVariation.xvariation ne null}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Variation</label>
+							<input type="text" class="form-control" th:value="${itemVariation.variationName}"/>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="mb-3 form-group">
+							<label class="form-label d-block" for="xrequired">Is Selection Required?</label>
+							<input type="checkbox" id="xrequired" th:field="*{xrequired}">
+						</div>
+					</div>
+				</div>
+
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<button type="reset" th:attr="data-reloadurl='/MD16/detail-table?xitem='+ ${itemVariation.xitem} +'&xvariation=RESET', data-reloadid='detail-table-container'" class="btn btn-light btn-sm btn-detail-reset">Clear</button>
+					</div>
+					<div>
+						<button th:if="${itemVariation.xvariation ne null}" th:attr="data-url=@{/MD16/detail-table?xitem=} + ${itemVariation.xitem} + '&xvariation=' + ${itemVariation.xvariation}" type="button" class="btn btn-danger btn-sm btn-detail-delete"><i class="ph-trash me-2"></i> Delete</button>
+						<button th:if="${itemVariation.xvariation ne null}" type="submit" class="btn btn-primary btn-sm btn-detail-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
+						<button th:if="${itemVariation.xvariation eq null}" type="submit" class="btn btn-primary btn-sm btn-detail-submit"><i class="ph-plus me-2"></i> Add New</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="table-responsive" th:if="${not #lists.isEmpty(itemVariations)}">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Variation Name</th>
+						<th>Variation Options</th>
+						<th class="text-end">Selection Required?</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="x : ${itemVariations}">
+						<td>
+							<a class="detail-dataindex" th:attr="data-reloadid='detail-table-container', data-reloadurl='/MD16/detail-table?xitem=' + ${x.xitem} + '&xvariation=' + ${x.xvariation}" th:href="@{/MD16/detail-table?xitem=} + ${x.xitem} + '&xvariation=' + ${x.xvariation}" th:text="${x.variationName}"></a>
+						</td>
+						<td>
+							<table>
+								<tr th:each="o : ${x.options}">
+									<td th:text="${o.xname}"></td>
+									<td th:text="${o.xprice}"></td>
+								</tr>
+							</table>
+						</td>
+						<td class="text-end" th:text="${x.xrequired ? 'Y' : 'N'}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+
+			$('.btn-detail-reset').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('.btn-detail-submit').off('click').on('click', function(e){
+				e.preventDefault();
+				submitMainForm(null, $('form#detailform'));
+			});
+
+			$('.btn-detail-delete').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+	
+			$('a.detail-dataindex').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+		})
+	</script>
+</div>

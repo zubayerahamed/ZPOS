@@ -10,6 +10,7 @@ import org.springframework.validation.Errors;
 import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Category;
 import com.zubayer.entity.Charge;
+import com.zubayer.entity.Currency;
 import com.zubayer.entity.Item;
 import com.zubayer.entity.Outlet;
 import com.zubayer.entity.Shop;
@@ -21,11 +22,13 @@ import com.zubayer.entity.Xscreens;
 import com.zubayer.entity.Xtable;
 import com.zubayer.entity.Xusers;
 import com.zubayer.entity.Zbusiness;
+import com.zubayer.entity.pk.CurrencyPK;
 import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.enums.SubmitFor;
 import com.zubayer.repository.AddOnsRepo;
 import com.zubayer.repository.CategoryRepo;
 import com.zubayer.repository.ChargeRepo;
+import com.zubayer.repository.CurrencyRepo;
 import com.zubayer.repository.UOMRepo;
 import com.zubayer.repository.VariationRepo;
 import com.zubayer.repository.XscreensRepo;
@@ -48,10 +51,24 @@ public class ModelValidator extends ConstraintValidator {
 	@Autowired private VariationRepo vRepo;
 	@Autowired private UOMRepo uomRepo;
 	@Autowired private ChargeRepo chargeRepo;
+	@Autowired private CurrencyRepo currencyRepo;
 
 	public void validateXusers(Xusers xusers, Errors errors, Validator validator) {
 		if(xusers == null) return;
 		super.validate(xusers, errors, validator);
+	}
+
+	public void validateCurrency(Currency currency, Errors errors, Validator validator) {
+		if(currency == null) return;
+		super.validate(currency, errors, validator);
+
+		Optional<Currency> op = currencyRepo.findById(new CurrencyPK(sessionManager.getBusinessId(), currency.getXcode()));
+		if(!op.isPresent()) return;
+
+		if(SubmitFor.INSERT.equals(currency.getSubmitFor()) && op.isPresent()) {
+			errors.rejectValue("xcode", "Currency Already Exist");
+			return;
+		}
 	}
 
 	public void validateZbusiness(Zbusiness zbusiness, Errors errors, Validator validator) {

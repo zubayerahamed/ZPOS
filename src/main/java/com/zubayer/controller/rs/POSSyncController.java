@@ -13,6 +13,7 @@ import com.zubayer.annotation.RestApiController;
 import com.zubayer.entity.AddOns;
 import com.zubayer.entity.Category;
 import com.zubayer.entity.Charge;
+import com.zubayer.entity.Currency;
 import com.zubayer.entity.Item;
 import com.zubayer.entity.Outlet;
 import com.zubayer.entity.Shop;
@@ -20,6 +21,8 @@ import com.zubayer.entity.Terminal;
 import com.zubayer.entity.UOM;
 import com.zubayer.entity.Variation;
 import com.zubayer.entity.VariationDetail;
+import com.zubayer.entity.Xfloor;
+import com.zubayer.entity.Xtable;
 import com.zubayer.entity.Xusers;
 import com.zubayer.entity.Zbusiness;
 import com.zubayer.entity.pk.OutletPK;
@@ -28,6 +31,7 @@ import com.zubayer.entity.pk.TerminalPK;
 import com.zubayer.repository.AddOnsRepo;
 import com.zubayer.repository.CategoryRepo;
 import com.zubayer.repository.ChargeRepo;
+import com.zubayer.repository.CurrencyRepo;
 import com.zubayer.repository.ItemRepo;
 import com.zubayer.repository.OutletRepo;
 import com.zubayer.repository.ShopRepo;
@@ -35,6 +39,8 @@ import com.zubayer.repository.TerminalRepo;
 import com.zubayer.repository.UOMRepo;
 import com.zubayer.repository.VariationDetailRepo;
 import com.zubayer.repository.VariationRepo;
+import com.zubayer.repository.XfloorRepo;
+import com.zubayer.repository.XtableRepo;
 import com.zubayer.repository.XusersRepo;
 import com.zubayer.repository.ZbusinessRepo;
 
@@ -63,6 +69,9 @@ public class POSSyncController {
 	@Autowired private VariationRepo variationRepo;
 	@Autowired private VariationDetailRepo variationDetailRepo;
 	@Autowired private ItemRepo itemRepo;
+	@Autowired private CurrencyRepo currencyRepo;
+	@Autowired private XfloorRepo floorRepo;
+	@Autowired private XtableRepo tableRepo;
 
 	@GetMapping("/business")
 	public Zbusiness syncBusiness(@RequestParam Integer businessid) {
@@ -103,6 +112,21 @@ public class POSSyncController {
 		return chargeRepo.findAllByZid(businessid);
 	}
 
+	@GetMapping("/currencies")
+	public List<Currency> syncCurrencies(@RequestParam Integer businessid){
+		return currencyRepo.findAllByZid(businessid);
+	}
+
+	@GetMapping("/floors")
+	public List<Xfloor> syncFloors(@RequestParam Integer businessid, @RequestParam Integer outletid, @RequestParam Integer shopid){
+		return floorRepo.findAllByZidAndXoutletAndXshop(businessid, outletid, shopid);
+	}
+
+	@GetMapping("/tables")
+	public List<Xtable> syncTables(@RequestParam Integer businessid, @RequestParam Integer outletid, @RequestParam Integer shopid){
+		return tableRepo.findAllByZidAndXoutletAndXshop(businessid, outletid, shopid);
+	}
+
 	@GetMapping("/category")
 	public List<Category> syncCategory(@RequestParam Integer businessid){
 		return categoryRepo.findAllByZid(businessid);
@@ -127,4 +151,6 @@ public class POSSyncController {
 	public List<Item> syncItem(@RequestParam Integer businessid){
 		return itemRepo.findAllByZid(businessid);
 	}
+
+	
 }

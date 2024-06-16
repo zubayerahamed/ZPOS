@@ -25,6 +25,7 @@ import com.zubayer.entity.pk.XscreensPK;
 import com.zubayer.exceptions.ResourceNotFoundException;
 import com.zubayer.model.MyUserDetail;
 import com.zubayer.model.ReloadSection;
+import com.zubayer.repository.CurrencyRepo;
 import com.zubayer.repository.ZbusinessRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AD10 extends AbstractBaseController {
 
 	@Autowired private ZbusinessRepo businessRepo;
+	@Autowired private CurrencyRepo currencyRepo;
 
 	@Override
 	protected String pageTitle() {
@@ -60,6 +62,7 @@ public class AD10 extends AbstractBaseController {
 		}
 
 		model.addAttribute("business", zb);
+		model.addAttribute("currencies", currencyRepo.findAllByZid(zb.getZid()));
 
 		if(isAjaxRequest(request)) {
 			return "pages/AD10/AD10-fragments::main-form";

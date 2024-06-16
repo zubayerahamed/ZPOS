@@ -16,4 +16,6 @@ import com.zubayer.entity.pk.XtablePK;
 public interface XtableRepo extends JpaRepository<Xtable, XtablePK> {
 
 	List<Xtable> findAllByZid(Integer zid);
+
+	List<Xtable> findAllByZidAndXoutletAndXshop(Integer zid, Integer xoutlet, Integer xshop);
 }

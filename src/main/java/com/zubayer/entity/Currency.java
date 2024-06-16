@@ -2,7 +2,7 @@ package com.zubayer.entity;
 
 import java.math.BigDecimal;
 
-import com.zubayer.entity.pk.ShopPK;
+import com.zubayer.entity.pk.CurrencyPK;
 import com.zubayer.enums.SubmitFor;
 
 import jakarta.persistence.Basic;
@@ -17,17 +17,16 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author Zubayer Ahamed
- * @since Apr 8, 2024
- * CSE202401068
+ * @since Jun 15, 2024
  */
 @Data
 @Entity
-@Table(name = "shop")
-@IdClass(ShopPK.class)
+@Table(name = "currency")
+@IdClass(CurrencyPK.class)
 @EqualsAndHashCode(callSuper = true)
-public class Shop extends AbstractModel<Integer> {
+public class Currency extends AbstractModel<Integer> {
 
-	private static final long serialVersionUID = 7818141720814743166L;
+	private static final long serialVersionUID = 2253798612486247362L;
 
 	@Id
 	@Basic(optional = false)
@@ -36,35 +35,28 @@ public class Shop extends AbstractModel<Integer> {
 
 	@Id
 	@Basic(optional = false)
-	@Column(name = "outletId")
-	private Integer outletId;
-
-	@Id
-	@Basic(optional = false)
-	@Column(name = "id")
-	private Integer id;
+	@Column(name = "xcode", length = 3)
+	private String xcode;
 
 	@Column(name = "xname", length = 100)
 	private String xname;
 
-	@Column(name = "xcurrency", length = 3)
-	private String xcurrency;
+	@Column(name = "xsign", length = 10)
+	private String xsign;
 
 	@Column(name = "xconvf")
 	private BigDecimal xconvf;
 
-	@Column(name = "zactive", length = 1)
-	private Boolean zactive = Boolean.TRUE;
-
-	@Transient
-	private String outletName;
+	@Column(name = "xsignposition")
+	private String xsignposition;
 
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 
-	public static Shop getDefaultInstance() {
-		Shop obj = new Shop();
+	public static Currency getDefaultInstance() {
+		Currency obj = new Currency();
 		obj.setSubmitFor(SubmitFor.INSERT);
+		obj.setXconvf(BigDecimal.ZERO);
 		return obj;
 	}
 }

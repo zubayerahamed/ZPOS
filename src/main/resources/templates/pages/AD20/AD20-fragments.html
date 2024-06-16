@@ -1,0 +1,138 @@
+<div th:fragment="main-form" xmlns:th="http://www.thymeleaf.org">
+	<div class="card">
+		<div class="card-body">
+			<div class="row">
+
+				<div class="col-md-4">
+					<form id="mainform" class="form-validate-jquery" th:action="@{/AD20/store}" th:object="${currency}" method="POST">
+						<input type="hidden" th:field="*{submitFor}"/>
+						<input type="hidden" th:if="${currency.xcode ne null}" th:field="*{xcode}">
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Currency Code</label>
+									<input type="text" class="form-control" th:field="*{xcode}" required="required" th:disabled="${currency.xcode ne null}">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Description</label>
+									<input type="text" class="form-control" th:field="*{xname}">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Sign</label>
+									<input type="text" class="form-control" th:field="*{xsign}">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Sign Position</label>
+									<select class="form-control select" th:field="*{xsignposition}">
+										<option value="">-- Select --</option>
+										<option value="LEFT">Left</option>
+										<option value="RIGHT">Right</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3 form-group">
+									<label class="form-label">Cuonversion Factor</label>
+									<input type="number" class="form-control numeric-only" th:field="*{xconvf}" min="0">
+								</div>
+							</div>
+						</div>
+
+						<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<button type="reset" th:attr="data-reloadurl='/AD20?xcode=RESET', data-reloadid='main-form-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
+							</div>
+							<div>
+								<button th:if="${currency.xcode ne null}" th:attr="data-url=@{/AD20?xcode=} + ${currency.xcode}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
+								<button th:if="${currency.xcode ne null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
+								<button th:if="${currency.xcode eq null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Add</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-1 mt-5"></div>
+				<div class="col-md-7">
+					<h3>List of Currency</h3>
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Currency</th>
+									<th>Description</th>
+									<th>Sign</th>
+									<th>Conversion Factor</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="x : ${currencies}">
+									<td>
+										<a class="detail-dataindex" th:attr="data-reloadid='main-form-container', data-reloadurl='/AD20?xcode=' + ${x.xcode}" th:href="@{/AD20?xcode=} + ${x.xcode}" th:text="${x.xcode}"></a>
+									</td>
+									<td th:text="${x.xname}"></td>
+									<td th:text="${x.xsign}"></td>
+									<td th:text="${x.xconvf}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+
+			$('.btn-reset').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('.btn-submit').off('click').on('click', function(e){
+				e.preventDefault();
+				submitMainForm();
+			});
+
+			$('.btn-delete').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+
+			$('a.detail-dataindex').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+		})
+	</script>
+</div>
