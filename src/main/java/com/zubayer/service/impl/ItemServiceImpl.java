@@ -91,6 +91,11 @@ public class ItemServiceImpl extends AbstractService implements ItemService {
 	private StringBuilder whereClause(String searchText, int suffix, String dependentParam) {
 		StringBuilder sql = new StringBuilder(" WHERE im.zid="+ sessionManager.getBusinessId()+ " ");
 
+		if(suffix == 1) {
+			// remove set item
+			sql = sql.append(" AND im.xsetmenu=0 ");
+		}
+
 		if (searchText == null || searchText.isEmpty()) return sql;
 
 		return sql.append(" AND (im.xcode LIKE '%" + searchText+ "%'" +  

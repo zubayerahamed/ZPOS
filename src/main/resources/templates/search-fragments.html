@@ -471,6 +471,8 @@
 			var mainreloadid = $('#mainreloadid').val();
 			var detailreloadurl = $('#detailreloadurl').val();
 			var detailreloadid = $('#detailreloadid').val();
+			var additionalreloadurl = $('#additionalreloadurl').val();
+			var additionalreloadid = $('#additionalreloadid').val();
 			var dependentParam = $('#dependentParam').val();
 			var resetParam = $('#resetParam').val();
 
@@ -534,6 +536,18 @@
 							id : detailreloadid,
 							url : detailreloadurl + value
 						});
+					}
+
+					if(additionalreloadid){
+						var idArr = additionalreloadid.split(',');
+						var urlArr = additionalreloadurl.split(',');
+
+						$.each(idArr, function(i, d){
+							sectionReloadAjaxReq({
+								id : d,
+								url : urlArr[i] + value
+							});
+						})
 					}
 				} else {
 					var prompt = $(this).data('prompt');

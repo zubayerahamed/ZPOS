@@ -2,7 +2,7 @@ package com.zubayer.entity;
 
 import java.math.BigDecimal;
 
-import com.zubayer.entity.pk.ItemAddonsPK;
+import com.zubayer.entity.pk.ItemSetsPK;
 import com.zubayer.enums.SubmitFor;
 
 import jakarta.persistence.Basic;
@@ -21,10 +21,10 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @Entity
-@Table(name = "item_addons")
-@IdClass(ItemAddonsPK.class)
+@Table(name = "item_sets")
+@IdClass(ItemSetsPK.class)
 @EqualsAndHashCode(callSuper = true)
-public class ItemAddons extends AbstractModel<Integer> {
+public class ItemSets extends AbstractModel<Integer> {
 
 	private static final long serialVersionUID = -1284100415450552808L;
 
@@ -40,22 +40,26 @@ public class ItemAddons extends AbstractModel<Integer> {
 
 	@Id
 	@Basic(optional = false)
-	@Column(name = "xaddons")
-	private Integer xaddons;
+	@Column(name = "xsetitem")
+	private Integer xsetitem;
+
+	@Column(name = "xqty")
+	private BigDecimal xqty;
 
 	@Transient
-	private String addonsName;
+	private String setItemName;
 
 	@Transient
-	private BigDecimal addonsPrice;
+	private String setItemUnit;
 
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;
 
-	public static ItemAddons getDefaultInstance(Integer xitem) {
-		ItemAddons obj = new ItemAddons();
+	public static ItemSets getDefaultInstance(Integer xitem) {
+		ItemSets obj = new ItemSets();
 		obj.setSubmitFor(SubmitFor.INSERT);
 		obj.setXitem(xitem);
+		obj.setXqty(BigDecimal.ZERO);
 		return obj;
 	}
 }

@@ -25,7 +25,9 @@
 										data-mainreloadurl='/MD16?xcode=',
 										data-mainreloadid='main-form-container',
 										data-detailreloadurl='/MD16/detail-table?xvariation=RESET&xitem=',
-										data-detailreloadid='detail-table-container'"
+										data-detailreloadid='detail-table-container',
+										data-additionalreloadurl='/MD16/addons-table?xaddons=RESET&xitem=,/MD16/sets-table?xsetitem=RESET&xitem=',
+										data-additionalreloadid='addons-table-container,sets-table-container'"
 										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
 							</div>
 						</div>
@@ -136,7 +138,15 @@
 
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
-						<button type="reset" th:attr="data-reloadurl='/MD16?xcode=RESET', data-reloadid='main-form-container', data-detailreloadurl='/MD16/detail-table?xitem=RESET&xvariation=RESET', data-detailreloadid='detail-table-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
+						<button type="reset" 
+								th:attr="
+									data-reloadurl='/MD16?xcode=RESET', 
+									data-reloadid='main-form-container', 
+									data-detailreloadurl='/MD16/detail-table?xitem=RESET&xvariation=RESET', 
+									data-detailreloadid='detail-table-container', 
+									data-addonsreloadurl='/MD16/addons-table?xitem=RESET&xaddons=RESET', 
+									data-addonsreloadid='addons-table-container'" 
+								class="btn btn-light btn-sm btn-reset">Clear</button>
 					</div>
 					<div>
 						<button th:if="${item.xcode ne null}" th:attr="data-url=@{/MD16?xcode=} + ${item.xcode}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
@@ -164,6 +174,12 @@
 					id : $(this).data('detailreloadid'),
 					url : $(this).data('detailreloadurl')
 				});
+
+				sectionReloadAjaxReq({
+					id : $(this).data('addonsreloadid'),
+					url : $(this).data('addonsreloadurl')
+				});
+
 
 			});
 
@@ -314,89 +330,79 @@
 
 
 <div th:fragment="addons-table" xmlns:th="http://www.thymeleaf.org">
-	<div class="card" th:if="${itemVariation}">
+	<div class="card" th:if="${itemAddons}">
 		<div class="card-header d-sm-flex align-items-sm-center py-sm-0">
-			<h6 class="py-sm-3 mb-sm-auto">Variation of Item - <span class="text-success" th:text="${item.xname}"></span> </h6>
+			<h6 class="py-sm-3 mb-sm-auto">AddOns of Item - <span class="text-success" th:text="${item.xname}"></span> </h6>
 		</div>
 
 		<div class="card-body">
-			<form id="detailform" class="form-validate-jquery" th:action="@{/MD16/detail/store}" th:object="${itemVariation}" method="POST" th:with="df=${'yyyy-MM-dd'}">
+			<form id="addonsform" class="form-validate-jquery" th:action="@{/MD16/addons/store}" th:object="${itemAddons}" method="POST" th:with="df=${'yyyy-MM-dd'}">
 				<input type="hidden" th:field="*{submitFor}"/>
 				<input type="hidden" th:field="*{xitem}">
-				<input type="hidden" th:field="*{xvariation}" th:if="${itemVariation.xvariation ne null}">
+				<input type="hidden" th:field="*{xaddons}" th:if="${itemAddons.xaddons ne null and itemAddons.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).UPDATE}">
 
 				<div class="row">
-					<div class="col-md-3" th:if="${itemVariation.xvariation eq null}">
+					<div class="col-md-3" th:if="${itemAddons.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).INSERT.toString()}">
 						<div class="mb-3 form-group">
-							<label class="form-label">Variation</label>
+							<label class="form-label">AddOns</label>
 							<div class="input-group">
 								<input 	type="text" 
 										class="form-control searchsuggest2"
-										id="xvariation"
-										th:value="${itemVariation.xvariation != null ? itemVariation.variationName : ''}">
-								<input 	type="hidden" class="search-val" name="xvariation" th:value="*{xvariation}" required="required"/>
+										id="xaddons"
+										th:value="${itemAddons.xaddons != null ? itemAddons.addonsName : ''}">
+								<input 	type="hidden" class="search-val" name="xaddons" th:value="*{xaddons}" required="required"/>
 								<span 	class="input-group-text btn-search" 
 										th:attr="
-										data-reloadurl='/search/table/LMD15/0?hint=', 
+										data-reloadurl='/search/table/LMD14/0?hint=', 
 										data-reloadid='search-suggest-results-container', 
-										data-fieldid='xvariation',
-										data-mainscreen=false" 
+										data-fieldid='xaddons',
+										data-mainscreen=true,
+										data-mainreloadurl='/MD16/addons-table?xitem='+ ${itemAddons.xitem} +'&xaddons=',
+										data-mainreloadid='addons-table-container'" 
 										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
-								<span 	class="input-group-text btn-search-clear" 
-										style="cursor: pointer;"><i class="ph-arrow-counter-clockwise"></i></span>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3" th:if="${itemVariation.xvariation ne null}">
+					<div class="col-md-3" th:if="${itemAddons.xaddons ne null and itemAddons.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).UPDATE.toString()}">
 						<div class="mb-3 form-group">
-							<label class="form-label">Variation</label>
-							<input type="text" class="form-control" th:value="${itemVariation.variationName}"/>
+							<label class="form-label">AddOns</label>
+							<input type="text" class="form-control" th:value="${itemAddons.addonsName}"/>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3" th:if="${itemAddons.xaddons ne null}">
 						<div class="mb-3 form-group">
-							<label class="form-label d-block" for="xrequired">Is Selection Required?</label>
-							<input type="checkbox" id="xrequired" th:field="*{xrequired}">
+							<label class="form-label">Price</label>
+							<input type="text" class="form-control" th:value="${itemAddons.addonsPrice}" disabled/>
 						</div>
 					</div>
 				</div>
 
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
-						<button type="reset" th:attr="data-reloadurl='/MD16/detail-table?xitem='+ ${itemVariation.xitem} +'&xvariation=RESET', data-reloadid='detail-table-container'" class="btn btn-light btn-sm btn-detail-reset">Clear</button>
+						<button type="reset" th:attr="data-reloadurl='/MD16/addons-table?xitem='+ ${itemAddons.xitem} +'&xaddons=RESET', data-reloadid='addons-table-container'" class="btn btn-light btn-sm btn-addons-reset">Clear</button>
 					</div>
 					<div>
-						<button th:if="${itemVariation.xvariation ne null}" th:attr="data-url=@{/MD16/detail-table?xitem=} + ${itemVariation.xitem} + '&xvariation=' + ${itemVariation.xvariation}" type="button" class="btn btn-danger btn-sm btn-detail-delete"><i class="ph-trash me-2"></i> Delete</button>
-						<button th:if="${itemVariation.xvariation ne null}" type="submit" class="btn btn-primary btn-sm btn-detail-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
-						<button th:if="${itemVariation.xvariation eq null}" type="submit" class="btn btn-primary btn-sm btn-detail-submit"><i class="ph-plus me-2"></i> Add New</button>
+						<button th:if="${itemAddons.xaddons ne null and itemAddons.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).UPDATE.toString()}" th:attr="data-url=@{/MD16/addons-table?xitem=} + ${itemAddons.xitem} + '&xaddons=' + ${itemAddons.xaddons}" type="button" class="btn btn-danger btn-sm btn-addons-delete"><i class="ph-trash me-2"></i> Delete</button>
+						<button th:if="${itemAddons.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).INSERT.toString()}" type="submit" class="btn btn-primary btn-sm btn-addons-submit"><i class="ph-plus me-2"></i> Add New</button>
 					</div>
 				</div>
 			</form>
 		</div>
 
-		<div class="table-responsive" th:if="${not #lists.isEmpty(itemVariations)}">
+		<div class="table-responsive" th:if="${not #lists.isEmpty(itemAddonsList)}">
 			<table class="table">
 				<thead>
 					<tr>
-						<th>Variation Name</th>
-						<th>Variation Options</th>
-						<th class="text-end">Selection Required?</th>
+						<th>AddOns</th>
+						<th class="text-end">Price</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="x : ${itemVariations}">
+					<tr th:each="x : ${itemAddonsList}">
 						<td>
-							<a class="detail-dataindex" th:attr="data-reloadid='detail-table-container', data-reloadurl='/MD16/detail-table?xitem=' + ${x.xitem} + '&xvariation=' + ${x.xvariation}" th:href="@{/MD16/detail-table?xitem=} + ${x.xitem} + '&xvariation=' + ${x.xvariation}" th:text="${x.variationName}"></a>
+							<a class="addons-dataindex" th:attr="data-reloadid='addons-table-container', data-reloadurl='/MD16/addons-table?xitem=' + ${x.xitem} + '&xaddons=' + ${x.xaddons}" th:href="@{/MD16/addons-table?xitem=} + ${x.xitem} + '&xaddons=' + ${x.xaddons}" th:text="${x.addonsName}"></a>
 						</td>
-						<td>
-							<table>
-								<tr th:each="o : ${x.options}">
-									<td th:text="${o.xname}"></td>
-									<td th:text="${o.xprice}"></td>
-								</tr>
-							</table>
-						</td>
-						<td class="text-end" th:text="${x.xrequired ? 'Y' : 'N'}"></td>
+						<td class="text-end" th:text="${x.addonsPrice}"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -406,7 +412,7 @@
 		$(document).ready(function(){
 			kit.ui.init();
 
-			$('.btn-detail-reset').off('click').on('click', function(e){
+			$('.btn-addons-reset').off('click').on('click', function(e){
 				e.preventDefault();
 
 				sectionReloadAjaxReq({
@@ -415,12 +421,12 @@
 				});
 			});
 
-			$('.btn-detail-submit').off('click').on('click', function(e){
+			$('.btn-addons-submit').off('click').on('click', function(e){
 				e.preventDefault();
-				submitMainForm(null, $('form#detailform'));
+				submitMainForm(null, $('form#addonsform'));
 			});
 
-			$('.btn-detail-delete').off('click').on('click', function(e){
+			$('.btn-addons-delete').off('click').on('click', function(e){
 				e.preventDefault();
 				if(!confirm("Are you sure, to delete this?")){
 					return;
@@ -428,7 +434,136 @@
 				deleteRequest($(this).data('url'));
 			});
 	
-			$('a.detail-dataindex').off('click').on('click', function(e){
+			$('a.addons-dataindex').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+		})
+	</script>
+</div>
+
+
+
+
+<div th:fragment="sets-table" xmlns:th="http://www.thymeleaf.org">
+	<div class="card" th:if="${itemSets}">
+		<div class="card-header d-sm-flex align-items-sm-center py-sm-0">
+			<h6 class="py-sm-3 mb-sm-auto">Set Items of Item - <span class="text-success" th:text="${item.xname}"></span> </h6>
+		</div>
+
+		<div class="card-body">
+			<form id="setsform" class="form-validate-jquery" th:action="@{/MD16/sets/store}" th:object="${itemSets}" method="POST" th:with="df=${'yyyy-MM-dd'}">
+				<input type="hidden" th:field="*{submitFor}"/>
+				<input type="hidden" th:field="*{xitem}">
+				<input type="hidden" th:field="*{xsetitem}" th:if="${itemSets.xsetitem ne null and itemSets.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).UPDATE}">
+
+				<div class="row">
+					<div class="col-md-3" th:if="${itemSets.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).INSERT.toString()}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Item</label>
+							<div class="input-group">
+								<input 	type="text" 
+										class="form-control searchsuggest2"
+										id="xsetitem"
+										th:value="${itemSets.xsetitem != null ? itemSets.setItemName : ''}">
+								<input 	type="hidden" class="search-val" name="xsetitem" th:value="*{xsetitem}" required="required"/>
+								<span 	class="input-group-text btn-search" 
+										th:attr="
+										data-reloadurl='/search/table/LMD16/1?hint=', 
+										data-reloadid='search-suggest-results-container', 
+										data-fieldid='xsetitem',
+										data-mainscreen=true,
+										data-mainreloadurl='/MD16/sets-table?xitem='+ ${itemSets.xitem} +'&xsetitem=',
+										data-mainreloadid='sets-table-container'" 
+										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3" th:if="${itemSets.xsetitem ne null and itemSets.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).UPDATE.toString()}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Item</label>
+							<input type="text" class="form-control" th:value="${itemSets.setItemName}"/>
+						</div>
+					</div>
+					<div class="col-md-3" th:if="${itemSets.xsetitem ne null}">
+						<div class="mb-3 form-group">
+							<label class="form-label">UOM</label>
+							<input type="text" class="form-control" th:value="${itemSets.setItemUnit}" disabled/>
+						</div>
+					</div>
+					<div class="col-md-3" th:if="${itemSets.xsetitem ne null}">
+						<div class="mb-3 form-group">
+							<label class="form-label">Quantity</label>
+							<input type="number" class="form-control numeric-only" th:field="${itemSets.xqty}" min="0" required/>
+						</div>
+					</div>
+				</div>
+
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<button type="reset" th:attr="data-reloadurl='/MD16/sets-table?xitem='+ ${itemSets.xitem} +'&xsetitem=RESET', data-reloadid='sets-table-container'" class="btn btn-light btn-sm btn-sets-reset">Clear</button>
+					</div>
+					<div>
+						<button th:if="${itemSets.xsetitem ne null and itemSets.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).UPDATE.toString()}" th:attr="data-url=@{/MD16/sets-table?xitem=} + ${itemSets.xitem} + '&xsetitem=' + ${itemSets.xsetitem}" type="button" class="btn btn-danger btn-sm btn-sets-delete"><i class="ph-trash me-2"></i> Delete</button>
+						<button th:if="${itemSets.submitFor.toString() eq T(com.zubayer.enums.SubmitFor).INSERT.toString()}" type="submit" class="btn btn-primary btn-sm btn-sets-submit"><i class="ph-plus me-2"></i> Add New</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="table-responsive" th:if="${not #lists.isEmpty(itemSetsList)}">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Item</th>
+						<th class="text-center">UOM</th>
+						<th class="text-end">Quantity</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="x : ${itemSetsList}">
+						<td>
+							<a class="sets-dataindex" th:attr="data-reloadid='sets-table-container', data-reloadurl='/MD16/sets-table?xitem=' + ${x.xitem} + '&xsetitem=' + ${x.xsetitem}" th:href="@{/MD16/sets-table?xitem=} + ${x.xitem} + '&xsetitem=' + ${x.xsetitem}" th:text="${x.setItemName}"></a>
+						</td>
+						<td class="text-center" th:text="${x.setItemUnit}"></td>
+						<td class="text-end" th:text="${x.xqty}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			kit.ui.init();
+
+			$('.btn-sets-reset').off('click').on('click', function(e){
+				e.preventDefault();
+
+				sectionReloadAjaxReq({
+					id : $(this).data('reloadid'),
+					url : $(this).data('reloadurl')
+				});
+			});
+
+			$('.btn-sets-submit').off('click').on('click', function(e){
+				e.preventDefault();
+				submitMainForm(null, $('form#setsform'));
+			});
+
+			$('.btn-sets-delete').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+	
+			$('a.sets-dataindex').off('click').on('click', function(e){
 				e.preventDefault();
 
 				sectionReloadAjaxReq({
