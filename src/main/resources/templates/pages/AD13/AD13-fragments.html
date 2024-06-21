@@ -62,6 +62,7 @@
 								<button type="reset" th:attr="data-reloadurl='/AD13?id=RESET&outletid=RESET&shopid=RESET', data-reloadid='main-form-container'" class="btn btn-light btn-sm btn-reset">Clear</button>
 							</div>
 							<div>
+								<button th:if="${terminal.id ne null and terminal.xdevice ne null}" th:attr="data-url=@{/AD13/revoke-device?id=} + ${terminal.id} + '&outletid=' + ${terminal.outletId} + '&shopid=' + ${terminal.shopId}" type="button" class="btn btn-warning btn-sm btn-revoke"><i class="ph-arrow-counter-clockwise me-2"></i> Revoke Device</button>
 								<button th:if="${terminal.id ne null}" th:attr="data-url=@{/AD13?id=} + ${terminal.id} + '&outletid=' + ${terminal.outletId} + '&shopid=' + ${terminal.shopId}" type="button" class="btn btn-danger btn-sm btn-delete"><i class="ph-trash me-2"></i> Delete</button>
 								<button th:if="${terminal.id ne null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Update</button>
 								<button th:if="${terminal.id eq null}" type="submit" class="btn btn-primary btn-sm btn-submit"><i class="ph-floppy-disk me-2"></i> Add</button>
@@ -122,6 +123,14 @@
 			$('.btn-delete').off('click').on('click', function(e){
 				e.preventDefault();
 				if(!confirm("Are you sure, to delete this?")){
+					return;
+				}
+				deleteRequest($(this).data('url'));
+			});
+
+			$('.btn-revoke').off('click').on('click', function(e){
+				e.preventDefault();
+				if(!confirm("Are you sure, to revoke this device?")){
 					return;
 				}
 				deleteRequest($(this).data('url'));

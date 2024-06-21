@@ -176,6 +176,25 @@ public class AD13 extends AbstractBaseController {
 		return responseHelper.getResponse();
 	}
 
+	@DeleteMapping("/revoke-device")
+	public @ResponseBody Map<String, Object> revokeDevice(@RequestParam Integer id, @RequestParam Integer outletid, @RequestParam Integer shopid){
+		Optional<Terminal> op = terminalRepo.findById(new TerminalPK(sessionManager.getBusinessId(), outletid, shopid, id));
+		if(!op.isPresent()) {
+			responseHelper.setErrorStatusAndMessage("Data not found in this system to do delete");
+			return responseHelper.getResponse();
+		}
+
+		Terminal obj = op.get();
+		obj.setXdevice(null);
+		terminalRepo.save(obj);
+
+		List<ReloadSection> reloadSections = new ArrayList<>();
+		reloadSections.add(new ReloadSection("main-form-container", "/AD13?id=" + id + "&outletid=" + outletid + "&shopid=" + shopid));
+		responseHelper.setReloadSections(reloadSections);
+		responseHelper.setSuccessStatusAndMessage("Device Revoked Successfully");
+		return responseHelper.getResponse();
+	}
+
 	@GetMapping("/shopid-field")
 	public String loadXsaddFieldFragment(@RequestParam Integer outletid, @RequestParam(required = false) Integer terminalid,  Model model){
 		List<Shop> shops = shopRepo.findAllByZidAndOutletId(sessionManager.getBusinessId(), outletid);

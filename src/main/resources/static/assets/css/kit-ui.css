@@ -27,6 +27,68 @@ input[scroller=hide] {
 }
 
 
+
+/* ------------------------------------------------------------------------------
+ * Image cropper modal
+ * ---------------------------------------------------------------------------- */
+.box-item {
+	width: 48%;
+	margin-left: 1%;
+	margin-right: 1%;
+	border-radius: 10px;
+	padding: 10px !important;
+	box-sizing: border-box;
+	box-shadow: 0px 0px 5px #ddd;
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+.box-item-success {
+	color: #fff;
+	background-color: #059669;
+}
+
+.box-item-danger {
+	color: #fff;
+	background-color: #EF4444
+}
+
+.box-item-primary {
+	color: #fff;
+	background-color: #0c83ff;
+}
+
+.box-item h2,
+.box-item h3 {
+	padding: 0;
+	margin: 0;
+}
+
+input#avatar,
+input.avatar-image {
+	display: none;
+}
+
+#image {
+	display: block;
+	max-width: 100%;
+}
+
+.preview {
+	text-align: center;
+	overflow: hidden;
+	width: 160px;
+	height: 160px;
+	margin: 0 auto;
+	border: 1px solid red;
+}
+
+.section {
+	margin-top: 150px;
+	background: #fff;
+	padding: 50px 30px;
+}
+
 /*
 =========================================
 ============ Search suggest =========

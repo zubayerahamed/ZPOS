@@ -5,133 +5,158 @@
 			<form id="mainform" class="form-validate-jquery" th:action="@{/MD16/store}" th:object="${item}" method="POST">
 				<input type="hidden" th:field="*{submitFor}"/>
 				<input type="hidden" th:if="${item.xcode ne null}" th:field="*{xcode}">
+				<input type="hidden" id="entityid" th:if="${item.xcode ne null}" th:value="${item.xcode}">
 
 				<div class="row">
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Code</label>
-							<div class="input-group">
-								<input 	type="text" 
-										class="form-control searchsuggest2"
-										name="xcode"
-										th:value="${item.xcode != null ? item.xcode : ''}"
-										disabled="disabled">
-								<span 	class="input-group-text btn-search" 
-										th:attr="
-										data-reloadurl='/search/table/LMD16/0?hint=', 
-										data-reloadid='search-suggest-results-container', 
-										data-fieldid='xcode',
-										data-mainscreen=true,
-										data-mainreloadurl='/MD16?xcode=',
-										data-mainreloadid='main-form-container',
-										data-detailreloadurl='/MD16/detail-table?xvariation=RESET&xitem=',
-										data-detailreloadid='detail-table-container',
-										data-additionalreloadurl='/MD16/addons-table?xaddons=RESET&xitem=,/MD16/sets-table?xsetitem=RESET&xitem=',
-										data-additionalreloadid='addons-table-container,sets-table-container'"
-										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
+					<div th:classappend="${item.xcode ne null ? 'col-md-10' : 'col-md-12'}">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Code</label>
+									<div class="input-group">
+										<input 	type="text" 
+												class="form-control searchsuggest2"
+												name="xcode"
+												th:value="${item.xcode != null ? item.xcode : ''}"
+												disabled="disabled">
+										<span 	class="input-group-text btn-search" 
+												th:attr="
+												data-reloadurl='/search/table/LMD16/0?hint=', 
+												data-reloadid='search-suggest-results-container', 
+												data-fieldid='xcode',
+												data-mainscreen=true,
+												data-mainreloadurl='/MD16?xcode=',
+												data-mainreloadid='main-form-container',
+												data-detailreloadurl='/MD16/detail-table?xvariation=RESET&xitem=',
+												data-detailreloadid='detail-table-container',
+												data-additionalreloadurl='/MD16/addons-table?xaddons=RESET&xitem=,/MD16/sets-table?xsetitem=RESET&xitem=',
+												data-additionalreloadid='addons-table-container,sets-table-container'"
+												style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Item Name</label>
+									<input type="text" class="form-control" th:field="*{xname}" required="required">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Category</label>
+									<div class="input-group">
+										<input 	type="text" 
+												class="form-control searchsuggest2"
+												id="xcat"
+												th:value="${item.xcat != null ? item.xcat + ' - ' + item.categoryname : ''}">
+										<input 	type="hidden" class="search-val" name="xcat" th:value="*{xcat}" required="required"/>
+										<span 	class="input-group-text btn-search" 
+												th:attr="
+												data-reloadurl='/search/table/LMD13/0?hint=', 
+												data-reloadid='search-suggest-results-container', 
+												data-fieldid='xcat',
+												data-mainscreen=false" 
+												style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
+										<span 	class="input-group-text btn-search-clear" 
+												style="cursor: pointer;"><i class="ph-arrow-counter-clockwise"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Sequence index</label>
+									<input type="number" class="form-control numeric-only" th:field="*{xseqn}" min="0" step="1" required="required">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">SKU (Serial Id)</label>
+									<input type="text" class="form-control" th:field="*{xsku}"/>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Barcode</label>
+									<input type="text" class="form-control" th:field="*{xbarcode}"/>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Subtitle</label>
+									<textarea rows="1" cols="" class="form-control" th:field="*{xsubtitle}"></textarea>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Deacription</label>
+									<textarea rows="1" cols="" class="form-control" th:field="*{xdesc}"></textarea>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Unit of Measurement</label>
+									<select th:field="*{xuom}" class="form-control select" required>
+										<option value="">-- Select --</option>
+										<option th:each="x : ${uoms}" th:value="${x.xcode}" th:text="${x.xname}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">Price</label>
+									<input type="number" class="form-control numeric-only" th:field="*{xprice}" min="0" required="required">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">VAT/TAX</label>
+									<select th:field="*{xvat}" class="form-control select" required>
+										<option value="">-- Select --</option>
+										<option th:each="x : ${vats}" th:value="${x.xcode}" th:text="${x.xrate + '%'}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label">SD</label>
+									<select th:field="*{xsd}" class="form-control select" required>
+										<option value="">-- Select --</option>
+										<option th:each="x : ${sds}" th:value="${x.xcode}" th:text="${x.xrate + '%'}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label d-block" for="xsetmenu">Is Set Menu?</label>
+									<input type="checkbox" id="xsetmenu" th:field="*{xsetmenu}">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="mb-3 form-group">
+									<label class="form-label d-block" for="zactive">Is Active?</label>
+									<input type="checkbox" id="zactive" th:field="*{zactive}">
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Item Name</label>
-							<input type="text" class="form-control" th:field="*{xname}" required="required">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Category</label>
-							<div class="input-group">
-								<input 	type="text" 
-										class="form-control searchsuggest2"
-										id="xcat"
-										th:value="${item.xcat != null ? item.xcat + ' - ' + item.categoryname : ''}">
-								<input 	type="hidden" class="search-val" name="xcat" th:value="*{xcat}" required="required"/>
-								<span 	class="input-group-text btn-search" 
-										th:attr="
-										data-reloadurl='/search/table/LMD13/0?hint=', 
-										data-reloadid='search-suggest-results-container', 
-										data-fieldid='xcat',
-										data-mainscreen=false" 
-										style="cursor: pointer;"><i class="ph-magnifying-glass"></i></span>
-								<span 	class="input-group-text btn-search-clear" 
-										style="cursor: pointer;"><i class="ph-arrow-counter-clockwise"></i></span>
+
+					<div class="col-md-2" th:if="${item.xcode ne null}">
+						<div class="card">
+							<div class="sidebar-section-body text-center" style="padding: 20px;">
+								<div class="card-img-actions d-inline-block mb-3">
+									<img id="imagePreview" th:src="@{/assets/images/placeholder.png}" alt="Item Image" width="100%"/>
+									<input type="hidden" th:if="${item.imageBase64 ne null}" id="imageBase64" th:value="${item.imageBase64}" readonly></input>
+									<div class="card-img-actions-overlay card-img">
+										<input type="file" name="image" class="form-control avatar-image" id="avatar" accept="image/*">
+										<a th:href="@{/MD16/image}" class="btn btn-outline-white btn-icon rounded-pill avatar-upload" id="avatar-upload"><i class="ph-pencil"></i></a>
+									</div>
+								</div>
+								<div class="d-flex justify-content-center mt-3">
+									<a href="#" class="link-pink" data-bs-popup="tooltip" aria-label="Delete Image" data-bs-original-title="Delete Image">
+										<i class="ph-trash"></i>
+									</a>
+								</div>
 							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Sequence index</label>
-							<input type="number" class="form-control numeric-only" th:field="*{xseqn}" min="0" step="1" required="required">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">SKU (Serial Id)</label>
-							<input type="text" class="form-control" th:field="*{xsku}"/>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Barcode</label>
-							<input type="text" class="form-control" th:field="*{xbarcode}"/>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Subtitle</label>
-							<textarea rows="1" cols="" class="form-control" th:field="*{xsubtitle}"></textarea>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Deacription</label>
-							<textarea rows="1" cols="" class="form-control" th:field="*{xdesc}"></textarea>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Unit of Measurement</label>
-							<select th:field="*{xuom}" class="form-control select" required>
-								<option value="">-- Select --</option>
-								<option th:each="x : ${uoms}" th:value="${x.xcode}" th:text="${x.xname}"></option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">Price</label>
-							<input type="number" class="form-control numeric-only" th:field="*{xprice}" min="0" required="required">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">VAT/TAX</label>
-							<select th:field="*{xvat}" class="form-control select" required>
-								<option value="">-- Select --</option>
-								<option th:each="x : ${vats}" th:value="${x.xcode}" th:text="${x.xrate + '%'}"></option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label">SD</label>
-							<select th:field="*{xsd}" class="form-control select" required>
-								<option value="">-- Select --</option>
-								<option th:each="x : ${sds}" th:value="${x.xcode}" th:text="${x.xrate + '%'}"></option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label d-block" for="xsetmenu">Is Set Menu?</label>
-							<input type="checkbox" id="xsetmenu" th:field="*{xsetmenu}">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="mb-3 form-group">
-							<label class="form-label d-block" for="zactive">Is Active?</label>
-							<input type="checkbox" id="zactive" th:field="*{zactive}">
 						</div>
 					</div>
 				</div>
@@ -195,6 +220,14 @@
 				}
 				deleteRequest($(this).data('url'));
 			});
+
+			var imageBase64 = $('#imageBase64').val();
+			var imagePreview= document.getElementById('imagePreview');
+			if(imageBase64 != undefined){
+				if(imagePreview) {
+					imagePreview.src = "data:image/png;base64," + imageBase64;
+				}
+			}
 
 		})
 	</script>

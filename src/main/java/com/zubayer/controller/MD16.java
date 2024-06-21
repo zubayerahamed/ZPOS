@@ -2,6 +2,7 @@ package com.zubayer.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -553,6 +554,56 @@ public class MD16 extends AbstractBaseController {
 		reloadSections.add(new ReloadSection("sets-table-container", "/MD16/sets-table?xitem="+xitem+"&xsetitem=RESET"));
 		responseHelper.setReloadSections(reloadSections);
 		responseHelper.setSuccessStatusAndMessage("Deleted successfully");
+		return responseHelper.getResponse();
+	}
+
+	@PostMapping("/image")
+	public @ResponseBody Map<String, Object> uploadImage(String image, String id){
+		if(StringUtils.isBlank(image)) {
+			responseHelper.setErrorStatusAndMessage("Image required");
+			return responseHelper.getResponse();
+		}
+
+		if(StringUtils.isBlank(id)) {
+			responseHelper.setErrorStatusAndMessage("Invalid Operation");
+			return responseHelper.getResponse();
+		}
+
+		Optional<Item> itemOp = itemRepo.findById(new ItemPK(sessionManager.getBusinessId(), Integer.valueOf(id)));
+		if(!itemOp.isPresent()) {
+			responseHelper.setErrorStatusAndMessage("Item not found in this system");
+			return responseHelper.getResponse();
+		}
+
+		// If the string contains a data URL prefix, remove it
+		if (image.startsWith("data:")) {
+			image = image.substring(image.indexOf(",") + 1);
+		}
+
+		// Validate the Base64 string
+		if (!BASE64_PATTERN.matcher(image).matches()) {
+			throw new IllegalArgumentException("Invalid Base64 string");
+		}
+
+		byte[] imageByte = Base64.getDecoder().decode(image);
+		if(imageByte == null) {
+			responseHelper.setErrorStatusAndMessage("Invalid Image");
+			return responseHelper.getResponse();
+		}
+
+		Item item = itemOp.get();
+		item.setXimage(imageByte);
+		item = itemRepo.save(item);
+
+		if(item == null) {
+			responseHelper.setErrorStatusAndMessage("Image not saved");
+			return responseHelper.getResponse();
+		}
+
+		List<ReloadSection> reloadSections = new ArrayList<>();
+		reloadSections.add(new ReloadSection("main-form-container", "/MD16?xcode=" + item.getXcode()));
+		responseHelper.setReloadSections(reloadSections);
+		responseHelper.setSuccessStatusAndMessage("Image Saved Successfully");
 		return responseHelper.getResponse();
 	}
 }

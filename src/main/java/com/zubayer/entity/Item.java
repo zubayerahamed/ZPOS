@@ -1,6 +1,7 @@
 package com.zubayer.entity;
 
 import java.math.BigDecimal;
+import java.util.Base64;
 
 import com.zubayer.entity.pk.ItemPK;
 import com.zubayer.enums.SubmitFor;
@@ -95,6 +96,12 @@ public class Item extends AbstractModel<Integer> {
 	@Transient
 	private String imageBase64;
 
+	public String getImageBase64() {
+		if(this.getXimage() == null) return null;
+		String base64String = Base64.getEncoder().encodeToString(this.getXimage());
+		return base64String;
+	}
+
 	@Transient
 	private String unit;
 
@@ -106,8 +113,6 @@ public class Item extends AbstractModel<Integer> {
 
 	@Transient
 	private BigDecimal sd;
-
-	
 
 	@Transient
 	private SubmitFor submitFor = SubmitFor.UPDATE;

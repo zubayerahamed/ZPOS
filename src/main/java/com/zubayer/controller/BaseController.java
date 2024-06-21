@@ -1,6 +1,7 @@
 package com.zubayer.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -28,6 +29,7 @@ public class BaseController {
 	protected static final SimpleDateFormat SDF2 = new SimpleDateFormat("E, dd-MMM-yyyy");
 	protected static final SimpleDateFormat SDF3 = new SimpleDateFormat("E, dd-MMM-yyyy HH:mm:ss");
 	protected static final String UTF_CODE = "UTF-8";
+	protected static final Pattern BASE64_PATTERN = Pattern.compile("^[A-Za-z0-9+/=]*$");
 
 	@Autowired protected ApplicationContext appContext;
 	@Autowired protected Environment env;
