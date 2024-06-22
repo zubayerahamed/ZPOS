@@ -15,6 +15,9 @@ import com.zubayer.entity.Category;
 import com.zubayer.entity.Charge;
 import com.zubayer.entity.Currency;
 import com.zubayer.entity.Item;
+import com.zubayer.entity.ItemAddons;
+import com.zubayer.entity.ItemSets;
+import com.zubayer.entity.ItemVariations;
 import com.zubayer.entity.Outlet;
 import com.zubayer.entity.Shop;
 import com.zubayer.entity.Terminal;
@@ -32,7 +35,10 @@ import com.zubayer.repository.AddOnsRepo;
 import com.zubayer.repository.CategoryRepo;
 import com.zubayer.repository.ChargeRepo;
 import com.zubayer.repository.CurrencyRepo;
+import com.zubayer.repository.ItemAddonsRepo;
 import com.zubayer.repository.ItemRepo;
+import com.zubayer.repository.ItemSetsRepo;
+import com.zubayer.repository.ItemVariationsRepo;
 import com.zubayer.repository.OutletRepo;
 import com.zubayer.repository.ShopRepo;
 import com.zubayer.repository.TerminalRepo;
@@ -72,6 +78,9 @@ public class POSSyncController {
 	@Autowired private CurrencyRepo currencyRepo;
 	@Autowired private XfloorRepo floorRepo;
 	@Autowired private XtableRepo tableRepo;
+	@Autowired private ItemVariationsRepo itemVariationsRepo;
+	@Autowired private ItemAddonsRepo itemAddonsRepo;
+	@Autowired private ItemSetsRepo itemSetsRepo;
 
 	@GetMapping("/business")
 	public Zbusiness syncBusiness(@RequestParam Integer businessid) {
@@ -152,5 +161,18 @@ public class POSSyncController {
 		return itemRepo.findAllByZid(businessid);
 	}
 
-	
+	@GetMapping("/item-variations")
+	public List<ItemVariations> syncItemVariations(@RequestParam Integer businessid){
+		return itemVariationsRepo.findAllByZid(businessid);
+	}
+
+	@GetMapping("/item-addons")
+	public List<ItemAddons> syncItemAddons(@RequestParam Integer businessid){
+		return itemAddonsRepo.findAllByZid(businessid);
+	}
+
+	@GetMapping("/item-sets")
+	public List<ItemSets> syncItemSets(@RequestParam Integer businessid){
+		return itemSetsRepo.findAllByZid(businessid);
+	}
 }
