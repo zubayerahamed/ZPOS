@@ -2,7 +2,7 @@ spring:
   datasource: 
     url: jdbc:sqlserver://localhost;databaseName=ZPOS;encrypt=true;trustServerCertificate=true;
     username: sa
-    password: zubayer%123
+    password: zubayer@123
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     tomcat:
       max-wait: 200000
